@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>대시보드 · 태블릿</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+:root{--bg:#F4F7F8;--ink:#0F172A;--sub:#475569;--mut:#536274;--line:#E2E8F0;--pri:#007A64;--mint:#00C9A7;--denim:#2563EB;--amber:#F59E0B;--coral:#F43F5E;--fb:15px;--ft:24px;--fk:28px;--fs:12.5px;--gut:20px}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Noto Sans KR',system-ui,sans-serif;font-size:var(--fb);line-height:1.5}
+.mono{font-family:'JetBrains Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.lbl{font-size:var(--fs);color:var(--mut)}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px}
+.h1{margin:0;font-size:var(--ft);font-weight:700;line-height:1.25}
+.h3{margin:0;font-size:var(--fb);font-weight:700}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;min-width:44px;padding:0 16px;border-radius:8px;border:1px solid #CBD5E1;background:#fff;color:var(--ink);font:inherit;font-size:var(--fs);font-weight:500;cursor:pointer}
+.btn.pri{background:var(--pri);border-color:var(--pri);color:#fff}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;background:#FEF3C7;color:#78350F;font-size:var(--fs);font-weight:500}
+.chip{display:inline-flex;align-items:center;min-height:36px;padding:0 12px;border-radius:18px;border:1px solid #CBD5E1;background:#fff;font-size:var(--fs)}
+.rail{width:72px;flex:0 0 72px;background:#fff;border-right:1px solid var(--line);display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 0}
+.rail a{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--sub)}
+.rail a.on{background:#E6FAF6;color:#00574A}
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--gut)}
+.kpi{font-size:var(--fk);font-weight:700}
+.g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--gut)}
+</style>
+</helmet>
+<div style="display: flex; background: #F4F7F8; min-height: 1280px">
+<nav class="rail" aria-label="주요 메뉴">
+<span aria-hidden="true" style="width: 36px; height: 36px; border-radius: 9px; background: #007A64; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 8px">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V10M12 20V4M19 20v-7"></path></svg>
+</span>
+<sc-for list="{{ nav }}" as="n" hint-placeholder-count="5">
+<a class="{{ n.cls }}" href="{{ n.href }}" aria-label="{{ n.label }}" aria-current="{{ n.cur }}">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ n.icon }}"></path></svg>
+</a>
+</sc-for>
+</nav>
+<div style="flex: 1; min-width: 0; display: flex; flex-direction: column">
+<header style="display: flex; align-items: center; gap: 12px; padding: 12px var(--gut); background: #fff; border-bottom: 1px solid var(--line)">
+<strong>[프로젝트명]</strong>
+<span class="badge">샘플 데이터</span>
+<div style="flex: 1"></div>
+<button class="btn" type="button">공유</button>
+<button class="btn pri" type="button">내보내기</button>
+</header>
+<main style="padding: var(--gut); display: flex; flex-direction: column; gap: var(--gut)">
+<div>
+<h1 class="h1">월간 매출 대시보드</h1>
+<div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px">
+<sc-for list="{{ chips }}" as="c" hint-placeholder-count="3"><span class="chip">{{ c }}</span></sc-for>
+</div>
+</div>
+<section class="card" aria-label="AI 요약" style="background: #F0FDFA; border-color: #9FE8D8">
+<h2 class="h3">AI 요약</h2>
+<p style="margin: 4px 0 0">매출과 광고 효율이 함께 개선된 기간입니다. 채널 A가 성장을 이끌었습니다. (문장은 예시입니다)</p>
+</section>
+<section class="kpis" aria-label="핵심 지표">
+<sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4">
+<div class="card"><div class="lbl">{{ k.label }}</div><div class="kpi mono" style="margin-top: 4px">{{ k.value }}</div></div>
+</sc-for>
+</section>
+<section class="card" aria-label="일별 매출 추이">
+<h2 class="h3" style="margin-bottom: 8px">일별 매출 추이</h2>
+<svg viewBox="0 0 660 170" width="100%" role="img" aria-label="일별 매출 선 그래프(샘플)" style="display: block">
+<g stroke="#E2E8F0"><line x1="20" y1="20" x2="650" y2="20"></line><line x1="20" y1="70" x2="650" y2="70"></line><line x1="20" y1="120" x2="650" y2="120"></line></g>
+<polyline fill="none" stroke="#00A98C" stroke-width="2.5" points="20,130 97,120 175,125 252,95 330,100 407,80 485,70 562,75 640,50"></polyline>
+<polyline fill="none" stroke="#2563EB" stroke-width="2" stroke-dasharray="5 4" points="20,140 97,138 175,135 252,126 330,124 407,116 485,112 562,108 640,100"></polyline>
+</svg>
+</section>
+<div class="g2">
+<section class="card" aria-label="채널별 비중">
+<h2 class="h3" style="margin-bottom: 10px">채널별 비중</h2>
+<div style="display: flex; align-items: center; gap: 14px">
+<div role="img" aria-label="채널별 비중 도넛(샘플)" style="width: 110px; height: 110px; flex: 0 0 110px; border-radius: 50%; background: conic-gradient(#00A98C 0 45%, #2563EB 45% 75%, #F59E0B 75% 92%, #CBD5E1 92% 100%); display: flex; align-items: center; justify-content: center"><div style="width: 62px; height: 62px; background: #fff; border-radius: 50%"></div></div>
+<ul style="margin: 0; padding: 0; list-style: none">
+<sc-for list="{{ channels }}" as="c" hint-placeholder-count="4"><li style="display: flex; align-items: center; gap: 6px; font-size: var(--fs)"><span style="width: 10px; height: 10px; border-radius: 2px; background: {{ c.color }}"></span>{{ c.name }} <span class="mono">{{ c.pct }}</span></li></sc-for>
+</ul>
+</div>
+</section>
+<section class="card" aria-label="채널별 ROAS">
+<h2 class="h3" style="margin-bottom: 10px">채널별 ROAS</h2>
+<div style="display: flex; flex-direction: column; gap: 10px">
+<sc-for list="{{ bars }}" as="b" hint-placeholder-count="4"><div style="display: flex; align-items: center; gap: 8px; font-size: var(--fs)"><span style="width: 52px">{{ b.name }}</span><div style="flex: 1; height: 10px; background: #EEF2F5; border-radius: 5px"><div style="height: 10px; border-radius: 5px; background: #00A98C; width: {{ b.w }}"></div></div><span class="mono" style="width: 36px; text-align: right">{{ b.v }}</span></div></sc-for>
+</div>
+</section>
+</div>
+<section class="card" aria-label="상위 상품">
+<h2 class="h3" style="margin-bottom: 8px">상위 상품</h2>
+<div class="g2">
+<sc-for list="{{ products }}" as="p" hint-placeholder-count="4"><div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #E2E8F0"><span>{{ p.name }}</span><span class="mono">{{ p.v }}</span></div></sc-for>
+</div>
+</section>
+<p class="lbl" style="margin: 0 0 90px">※ 모든 수치는 샘플이며 실제 데이터가 아닙니다.</p>
+</main>
+<div style="position: sticky; bottom: 0; background: #fff; border-top: 1px solid var(--line); padding: 10px var(--gut); display: flex; gap: 10px">
+<label for="ai-in" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">AI에게 수정 요청</label>
+<input id="ai-in" type="text" placeholder="예: 광고비 선을 빼줘" style="flex: 1; min-height: 44px; border: 1px solid #CBD5E1; border-radius: 8px; padding: 0 12px; font: inherit">
+<button class="btn pri" type="button" aria-label="보내기">보내기</button>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1024,"height":1280}}'>
+class Component extends DCLogic {
+renderVals() {
+return {
+nav: [
+{ label: '대시보드', icon: 'M5 20V10M12 20V4M19 20v-7', cls: '', href: 'Home.dc.html', cur: 'false', open: false, children: [{ label: '1. 문제 정의·목표 설정', href: 'Steps.dc.html', cls: '', pick: null }, { label: '2. 데이터 수집', href: 'Steps.dc.html', cls: '', pick: null }, { label: '3. 전처리·정제', href: 'Check.dc.html', cls: '', pick: null }, { label: '4. 탐색적 분석(EDA)', href: 'Steps.dc.html', cls: '', pick: null }, { label: '5. 모델링·심층 분석', href: 'Steps.dc.html', cls: '', pick: null }, { label: '6. 결과 해석·시각화', href: 'Steps.dc.html', cls: '', pick: null }, { label: '7. 자동화·파이프라인', href: 'Steps.dc.html', cls: '', pick: null }] },
+{ label: '업로드', icon: 'M12 16V4M7 9l5-5 5 5M4 20h16', cls: '', href: 'Upload.dc.html', cur: 'false', open: false, children: [{ label: '1. 문제 정의·목표 설정', href: 'Steps.dc.html', cls: '', pick: null }, { label: '2. 데이터 수집', href: 'Steps.dc.html', cls: '', pick: null }, { label: '3. 전처리·정제', href: 'Check.dc.html', cls: '', pick: null }, { label: '4. 탐색적 분석(EDA)', href: 'Steps.dc.html', cls: '', pick: null }, { label: '5. 모델링·심층 분석', href: 'Steps.dc.html', cls: '', pick: null }, { label: '6. 결과 해석·시각화', href: 'Steps.dc.html', cls: '', pick: null }, { label: '7. 자동화·파이프라인', href: 'Steps.dc.html', cls: '', pick: null }] },
+{ label: '프로젝트', icon: 'M3 7h6l2 2h10v10H3z', cls: 'on', href: 'Projects.dc.html', cur: 'page', open: false, children: [{ label: '1. 문제 정의·목표 설정', href: 'Steps.dc.html', cls: '', pick: null }, { label: '2. 데이터 수집', href: 'Steps.dc.html', cls: '', pick: null }, { label: '3. 전처리·정제', href: 'Check.dc.html', cls: '', pick: null }, { label: '4. 탐색적 분석(EDA)', href: 'Steps.dc.html', cls: '', pick: null }, { label: '5. 모델링·심층 분석', href: 'Steps.dc.html', cls: '', pick: null }, { label: '6. 결과 해석·시각화', href: 'Steps.dc.html', cls: '', pick: null }, { label: '7. 자동화·파이프라인', href: 'Steps.dc.html', cls: '', pick: null }] },
+{ label: '데이터분석단계', icon: 'M4 6h16M4 12h16M4 18h10', cls: '', href: 'Steps.dc.html', cur: 'false', open: false, children: [{ label: '1. 문제 정의·목표 설정', href: 'Steps.dc.html', cls: '', pick: null }, { label: '2. 데이터 수집', href: 'Steps.dc.html', cls: '', pick: null }, { label: '3. 전처리·정제', href: 'Check.dc.html', cls: '', pick: null }, { label: '4. 탐색적 분석(EDA)', href: 'Steps.dc.html', cls: '', pick: null }, { label: '5. 모델링·심층 분석', href: 'Steps.dc.html', cls: '', pick: null }, { label: '6. 결과 해석·시각화', href: 'Steps.dc.html', cls: '', pick: null }, { label: '7. 자동화·파이프라인', href: 'Steps.dc.html', cls: '', pick: null }] },
+{ label: '리포트', icon: 'M7 3h7l5 5v13H7zM14 3v5h5', cls: '', href: 'Charts.dc.html', cur: 'false', open: false, children: [{ label: '1. 문제 정의·목표 설정', href: 'Steps.dc.html', cls: '', pick: null }, { label: '2. 데이터 수집', href: 'Steps.dc.html', cls: '', pick: null }, { label: '3. 전처리·정제', href: 'Check.dc.html', cls: '', pick: null }, { label: '4. 탐색적 분석(EDA)', href: 'Steps.dc.html', cls: '', pick: null }, { label: '5. 모델링·심층 분석', href: 'Steps.dc.html', cls: '', pick: null }, { label: '6. 결과 해석·시각화', href: 'Steps.dc.html', cls: '', pick: null }, { label: '7. 자동화·파이프라인', href: 'Steps.dc.html', cls: '', pick: null }] }
+],
+chips: ['기간: [시작일]~[종료일]', '채널: 전체', '상품: 전체'],
+kpis: [
+{ label: '총매출', value: '3,280,000원' },
+{ label: '광고비', value: '687,000원' },
+{ label: 'ROAS', value: '4.9배' },
+{ label: '주문 수', value: '1,284건' }
+],
+channels: [
+{ name: '채널 A', pct: '45%', color: '#00A98C' },
+{ name: '채널 B', pct: '30%', color: '#2563EB' },
+{ name: '채널 C', pct: '17%', color: '#F59E0B' },
+{ name: '기타', pct: '8%', color: '#CBD5E1' }
+],
+bars: [
+{ name: '채널 A', w: '90%', v: '6.2' },
+{ name: '채널 B', w: '70%', v: '4.8' },
+{ name: '채널 C', w: '45%', v: '3.1' },
+{ name: '기타', w: '30%', v: '2.0' }
+],
+products: [
+{ name: '[상품 1]', v: '812,000원' },
+{ name: '[상품 2]', v: '640,000원' },
+{ name: '[상품 3]', v: '455,000원' },
+{ name: '[상품 4]', v: '318,000원' }
+]
+};
+}
+}
+</script>
+</body>
+</html>

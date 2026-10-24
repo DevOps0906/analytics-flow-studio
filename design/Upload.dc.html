@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>업로드 · 데스크탑</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+:root{--bg:#F4F7F8;--ink:#0F172A;--sub:#475569;--mut:#536274;--line:#E2E8F0;--pri:#007A64;--mint:#00C9A7;--denim:#2563EB;--amber:#F59E0B;--coral:#F43F5E;--fb:14px;--ft:20px;--fk:24px;--fs:12px;--gut:16px}
+@media (min-width:768px){:root{--fb:15px;--ft:24px;--fk:28px;--fs:12.5px;--gut:20px}}
+@media (min-width:1200px){:root{--fb:16px;--ft:28px;--fk:32px;--fs:13px;--gut:24px}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Noto Sans KR',system-ui,sans-serif;font-size:var(--fb);line-height:1.5}
+.mono{font-family:'JetBrains Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.lbl{font-size:var(--fs);color:var(--mut)}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px}
+.h1{margin:0;font-size:var(--ft);font-weight:700;line-height:1.25}
+.h3{margin:0;font-size:var(--fb);font-weight:700}
+.btn{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 16px;border-radius:8px;border:1px solid #CBD5E1;background:#fff;color:var(--ink);font:inherit;font-size:var(--fs);font-weight:500;cursor:pointer}
+.btn.pri{background:var(--pri);border-color:var(--pri);color:#fff}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;background:#FEF3C7;color:#78350F;font-size:var(--fs);font-weight:500}
+.nav{display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:8px;color:var(--sub);text-decoration:none;font-size:var(--fb)}
+.nav:hover{background:#F1F5F9}
+.nav.on{background:#E6FAF6;color:#00574A;font-weight:700}
+.top{display:flex;align-items:center;flex-wrap:wrap;gap:12px;padding:10px var(--gut);background:#fff;border-bottom:1px solid var(--line)}
+.row{display:flex;flex-wrap:wrap;align-items:flex-start}
+.side{flex:0 0 232px;padding:16px;background:#fff;border-right:1px solid var(--line);align-self:stretch}
+.main{flex:999 1 560px;min-width:0;padding:var(--gut);display:flex;flex-direction:column;gap:var(--gut)}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--gut)}
+@media (max-width:767px){.g3{grid-template-columns:minmax(0,1fr)}.side{flex:1 1 100%}}
+.subnav{display:flex;flex-direction:column;gap:2px;margin:2px 0 6px 18px;padding-left:10px;border-left:2px solid #E2E8F0}
+.sub-a{display:flex;align-items:center;min-height:44px;padding:0 10px;border-radius:8px;color:var(--sub);text-decoration:none;font-size:var(--fs)}
+.sub-a:hover{background:#F1F5F9}
+.sub-a.on{background:#E6FAF6;color:#00574A;font-weight:700}
+a.btn{text-decoration:none}
+</style>
+</helmet>
+<div style="display: flex; flex-direction: column; background: #F4F7F8; min-height: 860px">
+<header class="top">
+<div style="display: flex; align-items: center; gap: 10px">
+<span aria-hidden="true" style="width: 32px; height: 32px; border-radius: 8px; background: #007A64; display: inline-flex; align-items: center; justify-content: center">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V10M12 20V4M19 20v-7"></path></svg>
+</span>
+<strong style="font-size: 16px">[서비스명]</strong>
+</div>
+<nav aria-label="현재 위치" class="lbl" style="margin-left: 12px">새 프로젝트 / <strong style="color: #0F172A">업로드</strong></nav>
+<div style="flex-grow: 1"></div>
+<span class="badge">샘플 화면</span>
+</header>
+<div class="row" style="flex-grow: 1">
+<aside class="side" aria-label="메뉴">
+<nav style="display: flex; flex-direction: column; gap: 4px" aria-label="주요 메뉴">
+<sc-for list="{{ nav }}" as="n" hint-placeholder-count="5">
+<a class="nav {{ n.cls }}" href="{{ n.href }}" aria-current="{{ n.cur }}">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ n.icon }}"></path></svg>
+<span>{{ n.label }}</span>
+</a>
+<sc-if value="{{ n.open }}" hint-placeholder-val="{{ false }}">
+<div class="subnav">
+<sc-for list="{{ n.children }}" as="c" hint-placeholder-count="7">
+<a class="sub-a {{ c.cls }}" href="{{ c.href }}" onClick="{{ c.pick }}">{{ c.label }}</a>
+</sc-for>
+</div>
+</sc-if>
+</sc-for>
+</nav>
+</aside>
+<main class="main">
+<div>
+<h1 class="h1">파일 올리기</h1>
+<p class="lbl" style="margin: 4px 0 0">CSV 또는 엑셀 파일을 올리면 형식과 인코딩을 자동으로 확인합니다.</p>
+</div>
+<section aria-label="파일 업로드 영역" style="border: 2px dashed #00A98C; border-radius: 16px; background: #F0FDFA; padding: 48px 24px; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center">
+<span aria-hidden="true" style="width: 64px; height: 64px; border-radius: 50%; background: #FFFFFF; border: 1px solid #9FE8D8; display: inline-flex; align-items: center; justify-content: center">
+<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#007A64" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"></path></svg>
+</span>
+<h2 class="h3" style="font-size: var(--ft)">파일을 여기로 끌어다 놓으세요</h2>
+<p class="lbl" style="margin: 0">또는</p>
+<button class="btn pri" type="button">파일 선택</button>
+<p class="lbl" style="margin: 0">지원 형식: CSV, XLSX · 파일당 최대 50MB</p>
+</section>
+<section class="card" aria-label="업로드한 파일">
+<h2 class="h3">업로드한 파일</h2>
+<div style="display: flex; flex-direction: column; margin-top: 8px">
+<sc-for list="{{ files }}" as="f" hint-placeholder-count="3">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; padding: 14px 0; border-top: 1px solid #E2E8F0">
+<div style="flex: 1 1 240px; min-width: 0">
+<div style="font-weight: 500">{{ f.name }}</div>
+<div class="lbl">{{ f.meta }}</div>
+</div>
+<div style="flex: 1 1 200px; display: flex; align-items: center; gap: 10px">
+<div style="flex: 1 1 auto; height: 8px; border-radius: 4px; background: #EEF2F5"><div style="height: 8px; border-radius: 4px; background: {{ f.bar }}; width: {{ f.pct }}"></div></div>
+<span class="mono lbl" style="min-width: 40px; text-align: right">{{ f.pct }}</span>
+</div>
+<span style="padding: 2px 10px; border-radius: 12px; font-size: var(--fs); font-weight: 500; background: {{ f.bg }}; color: {{ f.fg }}">{{ f.status }}</span>
+</div>
+</sc-for>
+</div>
+</section>
+<section aria-label="최근 프로젝트">
+<h2 class="h3" style="margin-bottom: 12px">최근 프로젝트</h2>
+<div class="g3">
+<sc-for list="{{ projects }}" as="p" hint-placeholder-count="3">
+<div class="card">
+<div style="font-weight: 700">{{ p.name }}</div>
+<div class="lbl" style="margin-top: 4px">{{ p.meta }}</div>
+</div>
+</sc-for>
+</div>
+</section>
+<div style="display: flex; justify-content: flex-end">
+<a class="btn pri" href="Steps.dc.html">데이터분석하기</a>
+</div>
+</main>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":860}}'>
+class Component extends DCLogic {
+renderVals() {
+return {
+nav: [
+{ label: '대시보드', icon: 'M5 20V10M12 20V4M19 20v-7', cls: '', href: 'Home.dc.html', cur: 'false', open: false, children: [{ label: '1. 문제 정의·목표 설정', href: 'Steps.dc.html', cls: '', pick: null }, { label: '2. 데이터 수집', href: 'Steps.dc.html', cls: '', pick: null }, { label: '3. 전처리·정제', href: 'Check.dc.html', cls: '', pick: null }, { label: '4. 탐색적 분석(EDA)', href: 'Steps.dc.html', cls: '', pick: null }, { label: '5. 모델링·심층 분석', href: 'Steps.dc.html', cls: '', pick: null }, { label: '6. 결과 해석·시각화', href: 'Steps.dc.html', cls: '', pick: null }, { label: '7. 자동화·파이프라인', href: 'Steps.dc.html', cls: '', pick: null }] },
+{ label: '업로드', icon: 'M12 16V4M7 9l5-5 5 5M4 20h16', cls: 'on', href: 'Upload.dc.html', cur: 'page', open: false, children: [{ label: '1. 문제 정의·목표 설정', href: 'Steps.dc.html', cls: '', pick: null }, { label: '2. 데이터 수집', href: 'Steps.dc.html', cls: '', pick: null }, { label: '3. 전처리·정제', href: 'Check.dc.html', cls: '', pick: null }, { label: '4. 탐색적 분석(EDA)', href: 'Steps.dc.html', cls: '', pick: null }, { label: '5. 모델링·심층 분석', href: 'Steps.dc.html', cls: '', pick: null }, { label: '6. 결과 해석·시각화', href: 'Steps.dc.html', cls: '', pick: null }, { label: '7. 자동화·파이프라인', href: 'Steps.dc.html', cls: '', pick: null }] },
+{ label: '프로젝트', icon: 'M3 7h6l2 2h10v10H3z', cls: '', href: 'Projects.dc.html', cur: 'false', open: false, children: [{ label: '1. 문제 정의·목표 설정', href: 'Steps.dc.html', cls: '', pick: null }, { label: '2. 데이터 수집', href: 'Steps.dc.html', cls: '', pick: null }, { label: '3. 전처리·정제', href: 'Check.dc.html', cls: '', pick: null }, { label: '4. 탐색적 분석(EDA)', href: 'Steps.dc.html', cls: '', pick: null }, { label: '5. 모델링·심층 분석', href: 'Steps.dc.html', cls: '', pick: null }, { label: '6. 결과 해석·시각화', href: 'Steps.dc.html', cls: '', pick: null }, { label: '7. 자동화·파이프라인', href: 'Steps.dc.html', cls: '', pick: null }] },
+{ label: '데이터분석단계', icon: 'M4 6h16M4 12h16M4 18h10', cls: '', href: 'Steps.dc.html', cur: 'false', open: false, children: [{ label: '1. 문제 정의·목표 설정', href: 'Steps.dc.html', cls: '', pick: null }, { label: '2. 데이터 수집', href: 'Steps.dc.html', cls: '', pick: null }, { label: '3. 전처리·정제', href: 'Check.dc.html', cls: '', pick: null }, { label: '4. 탐색적 분석(EDA)', href: 'Steps.dc.html', cls: '', pick: null }, { label: '5. 모델링·심층 분석', href: 'Steps.dc.html', cls: '', pick: null }, { label: '6. 결과 해석·시각화', href: 'Steps.dc.html', cls: '', pick: null }, { label: '7. 자동화·파이프라인', href: 'Steps.dc.html', cls: '', pick: null }] },
+{ label: '리포트', icon: 'M7 3h7l5 5v13H7zM14 3v5h5', cls: '', href: 'Charts.dc.html', cur: 'false', open: false, children: [{ label: '1. 문제 정의·목표 설정', href: 'Steps.dc.html', cls: '', pick: null }, { label: '2. 데이터 수집', href: 'Steps.dc.html', cls: '', pick: null }, { label: '3. 전처리·정제', href: 'Check.dc.html', cls: '', pick: null }, { label: '4. 탐색적 분석(EDA)', href: 'Steps.dc.html', cls: '', pick: null }, { label: '5. 모델링·심층 분석', href: 'Steps.dc.html', cls: '', pick: null }, { label: '6. 결과 해석·시각화', href: 'Steps.dc.html', cls: '', pick: null }, { label: '7. 자동화·파이프라인', href: 'Steps.dc.html', cls: '', pick: null }] }
+],
+files: [
+{ name: 'sales_sample.csv', meta: '2.4MB · 인코딩 UTF-8 감지', pct: '100%', bar: '#00A98C', status: '완료', bg: '#DCFCE7', fg: '#14532D' },
+{ name: 'ads_sample.xlsx', meta: '1.1MB · 시트 2개 감지', pct: '100%', bar: '#00A98C', status: '완료', bg: '#DCFCE7', fg: '#14532D' },
+{ name: 'refund_sample.csv', meta: '0.6MB · 인코딩 cp949 감지', pct: '64%', bar: '#2563EB', status: '업로드 중', bg: '#DBEAFE', fg: '#1E3A8A' }
+],
+projects: [
+{ name: '[프로젝트명 A]', meta: '파일 3개 · 마지막 수정 [날짜]' },
+{ name: '[프로젝트명 B]', meta: '파일 1개 · 마지막 수정 [날짜]' },
+{ name: '[프로젝트명 C]', meta: '파일 2개 · 마지막 수정 [날짜]' }
+]
+};
+}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>리포트 · 그래프 구조</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+:root{--bg:#F4F7F8;--ink:#0F172A;--sub:#475569;--mut:#536274;--line:#E2E8F0;--pri:#007A64;--fb:14px;--ft:20px;--fs:12px;--gut:16px;--cols:1}
+@media (min-width:768px){:root{--fb:15px;--ft:24px;--fs:12.5px;--gut:20px;--cols:2}}
+@media (min-width:1200px){:root{--fb:16px;--ft:28px;--fs:13px;--gut:24px;--cols:3}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Noto Sans KR',system-ui,sans-serif;font-size:var(--fb);line-height:1.5}
+.mono{font-family:'JetBrains Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.lbl{font-size:var(--fs);color:var(--mut)}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px}
+.h1{margin:0;font-size:var(--ft);font-weight:700;line-height:1.25}
+.h2{margin:0;font-size:calc(var(--fb) + 2px);font-weight:700}
+.h3{margin:0;font-size:var(--fb);font-weight:700}
+.btn{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 16px;border-radius:8px;border:1px solid var(--pri);background:var(--pri);color:#fff;text-decoration:none;font-size:var(--fs);font-weight:500}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;background:#FEF3C7;color:#78350F;font-size:var(--fs);font-weight:500}
+.nav{display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:8px;color:var(--sub);text-decoration:none;font-size:var(--fb)}
+.nav:hover{background:#F1F5F9}
+.nav.on{background:#E6FAF6;color:#00574A;font-weight:700}
+.top{display:flex;align-items:center;flex-wrap:wrap;gap:12px;padding:10px var(--gut);background:#fff;border-bottom:1px solid var(--line)}
+.row{display:flex;flex-wrap:wrap;align-items:flex-start}
+.side{flex:0 0 232px;padding:16px;background:#fff;border-right:1px solid var(--line);align-self:stretch}
+.main{flex:999 1 560px;min-width:0;padding:var(--gut);display:flex;flex-direction:column;gap:var(--gut)}
+.cg{display:grid;grid-template-columns:repeat(var(--cols),minmax(0,1fr));gap:var(--gut)}
+.cc{display:flex;flex-direction:column;gap:6px}
+.cc p{margin:0}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:640px}
+th{text-align:left;font-size:var(--fs);color:var(--mut);font-weight:500;padding:8px;border-bottom:1px solid var(--line)}
+td{padding:10px 8px;border-bottom:1px solid var(--line);font-size:var(--fs);vertical-align:top}
+svg text{font-family:'Noto Sans KR',system-ui,sans-serif}
+@media (max-width:767px){.side{flex:1 1 100%}}
+.subnav{display:flex;flex-direction:column;gap:2px;margin:2px 0 6px 18px;padding-left:10px;border-left:2px solid #E2E8F0}
+.sub-a{display:flex;align-items:center;min-height:44px;padding:0 10px;border-radius:8px;color:var(--sub);text-decoration:none;font-size:var(--fs)}
+.sub-a:hover{background:#F1F5F9}
+.sub-a.on{background:#E6FAF6;color:#00574A;font-weight:700}
+a.btn{text-decoration:none}
+</style>
+</helmet>
+<div style="display: flex; flex-direction: column; background: #F4F7F8; min-height: 1000px">
+<header class="top">
+<div style="display: flex; align-items: center; gap: 10px">
+<span aria-hidden="true" style="width: 32px; height: 32px; border-radius: 8px; background: #007A64; display: inline-flex; align-items: center; justify-content: center">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V10M12 20V4M19 20v-7"></path></svg>
+</span>
+<strong style="font-size: 16px">[서비스명]</strong>
+</div>
+<nav aria-label="현재 위치" class="lbl" style="margin-left: 12px">[프로젝트명] / <strong style="color: #0F172A">리포트</strong></nav>
+<div style="flex-grow: 1"></div>
+<span class="badge">샘플 데이터</span>
+</header>
+<div class="row" style="flex-grow: 1">
+<aside class="side" aria-label="메뉴">
+<nav style="display: flex; flex-direction: column; gap: 4px" aria-label="주요 메뉴">
+<sc-for list="{{ nav }}" as="n" hint-placeholder-count="5">
+<a class="nav {{ n.cls }}" href="{{ n.href }}" aria-current="{{ n.cur }}">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ n.icon }}"></path></svg>
+<span>{{ n.label }}</span>
+</a>
+<sc-if value="{{ n.open }}" hint-placeholder-val="{{ false }}">
+<div class="subnav">
+<sc-for list="{{ n.children }}" as="c" hint-placeholder-count="7">
+<a class="sub-a {{ c.cls }}" href="{{ c.href }}" onClick="{{ c.pick }}">{{ c.label }}</a>
+</sc-for>
+</div>
+</sc-if>
+</sc-for>
+</nav>
+</aside>
+<main class="main">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start; justify-content: space-between">
+<div style="flex: 1 1 360px">
+<h1 class="h1">리포트 · 그래프 구조</h1>
+<p class="lbl" style="margin: 4px 0 0">AI가 컬럼의 유형(날짜·숫자·범주)과 데이터 양을 보고 아래 규칙으로 그래프를 고릅니다. 사용자는 언제든 다른 유형으로 바꿀 수 있습니다.</p>
+</div>
+<a class="btn" href="Report.dc.html">A4 리포트 미리보기 열기</a>
+</div>
+
+<section class="card" aria-label="그래프 선택 규칙">
+<h2 class="h2">1. 데이터 조합별 자동 선택 규칙</h2>
+<p class="lbl" style="margin: 2px 0 10px">왼쪽 조건에 맞으면 기본 그래프를 만들고, 대안은 "다른 유형으로 보기"에서 고를 수 있습니다.</p>
+<div class="tw">
+<table>
+<thead><tr><th>데이터 조합</th><th>기본 그래프</th><th>대안</th><th>주의</th></tr></thead>
+<tbody>
+<sc-for list="{{ rules }}" as="r" hint-placeholder-count="12">
+<tr><td>{{ r.cond }}</td><td><strong>{{ r.main }}</strong></td><td>{{ r.alt }}</td><td>{{ r.note }}</td></tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+
+<section aria-label="시간 흐름 그래프">
+<h2 class="h2" style="margin-bottom: 10px">2. 시간 흐름</h2>
+<div class="cg">
+<div class="card cc"><h3 class="h3">선 그래프</h3><p class="lbl">날짜 1개 + 숫자 1개. 추세를 볼 때.</p>
+<svg viewBox="0 0 240 120" width="100%" role="img" aria-label="선 그래프 예시"><line x1="10" y1="100" x2="230" y2="100" stroke="#CBD5E1"></line><polyline fill="none" stroke="#00A98C" stroke-width="2.5" points="10,80 50,70 90,75 130,45 170,50 210,25"></polyline><circle cx="210" cy="25" r="4" fill="#00A98C"></circle><text x="150" y="18" font-size="10" fill="#0F172A">최근 값 강조</text></svg></div>
+<div class="card cc"><h3 class="h3">영역 그래프</h3><p class="lbl">누적 규모나 총량의 변화를 강조할 때.</p>
+<svg viewBox="0 0 240 120" width="100%" role="img" aria-label="영역 그래프 예시"><line x1="10" y1="100" x2="230" y2="100" stroke="#CBD5E1"></line><path d="M10,80 L50,70 L90,75 L130,45 L170,50 L210,25 L210,100 L10,100Z" fill="#00A98C" fill-opacity="0.25"></path><polyline fill="none" stroke="#00A98C" stroke-width="2.5" points="10,80 50,70 90,75 130,45 170,50 210,25"></polyline></svg></div>
+<div class="card cc"><h3 class="h3">다중 선 그래프</h3><p class="lbl">같은 단위의 숫자 2~4개 비교. 5개 이상이면 작은 다중 그래프로.</p>
+<svg viewBox="0 0 240 120" width="100%" role="img" aria-label="다중 선 그래프 예시"><line x1="10" y1="100" x2="230" y2="100" stroke="#CBD5E1"></line><polyline fill="none" stroke="#00A98C" stroke-width="2.5" points="10,80 50,70 90,75 130,45 170,50 210,25"></polyline><polyline fill="none" stroke="#2563EB" stroke-width="2" stroke-dasharray="5 4" points="10,90 50,86 90,80 130,76 170,70 210,60"></polyline><polyline fill="none" stroke="#B45309" stroke-width="2" stroke-dasharray="1 4" stroke-linecap="round" points="10,95 50,92 90,94 130,88 170,90 210,84"></polyline><text x="214" y="28" font-size="9" fill="#00574A">A</text><text x="214" y="63" font-size="9" fill="#1E3A8A">B</text><text x="214" y="87" font-size="9" fill="#78350F">C</text></svg></div>
+<div class="card cc"><h3 class="h3">콤보 (막대 + 선, 이중 축)</h3><p class="lbl">단위가 다른 숫자 2개. 예: 매출(원)과 ROAS(배).</p>
+<svg viewBox="0 0 240 120" width="100%" role="img" aria-label="콤보 그래프 예시"><line x1="10" y1="100" x2="230" y2="100" stroke="#CBD5E1"></line><g fill="#99E6D8"><rect x="22" y="60" width="22" height="40"></rect><rect x="64" y="50" width="22" height="50"></rect><rect x="106" y="65" width="22" height="35"></rect><rect x="148" y="40" width="22" height="60"></rect><rect x="190" y="30" width="22" height="70"></rect></g><polyline fill="none" stroke="#2563EB" stroke-width="2.5" points="33,50 75,38 117,56 159,28 201,20"></polyline><text x="10" y="12" font-size="9" fill="#536274">좌: 매출</text><text x="190" y="12" font-size="9" fill="#1E3A8A">우: ROAS</text></svg></div>
+<div class="card cc"><h3 class="h3">작은 다중 그래프</h3><p class="lbl">범주 5개 이상을 각각 같은 축으로 나란히 비교.</p>
+<svg viewBox="0 0 240 120" width="100%" role="img" aria-label="작은 다중 그래프 예시"><g fill="none" stroke="#00A98C" stroke-width="2"><polyline points="10,40 30,32 50,36 70,20 90,24"></polyline><polyline points="130,38 150,30 170,40 190,26 210,18"></polyline><polyline points="10,100 30,96 50,88 70,92 90,80"></polyline><polyline points="130,98 150,100 170,90 190,84 210,70"></polyline></g><g stroke="#CBD5E1"><line x1="10" y1="50" x2="100" y2="50"></line><line x1="130" y1="50" x2="220" y2="50"></line><line x1="10" y1="110" x2="100" y2="110"></line><line x1="130" y1="110" x2="220" y2="110"></line></g><g font-size="9" fill="#536274"><text x="10" y="10">채널 A</text><text x="130" y="10">채널 B</text><text x="10" y="70">채널 C</text><text x="130" y="70">채널 D</text></g></svg></div>
+<div class="card cc"><h3 class="h3">히트맵 (요일 × 시간)</h3><p class="lbl">날짜에서 요일·시간대 패턴을 뽑을 때.</p>
+<svg viewBox="0 0 240 120" width="100%" role="img" aria-label="히트맵 예시"><g><rect x="30" y="10" width="30" height="22" fill="#E6FAF6"></rect><rect x="64" y="10" width="30" height="22" fill="#99E6D8"></rect><rect x="98" y="10" width="30" height="22" fill="#33C9AE"></rect><rect x="132" y="10" width="30" height="22" fill="#00A98C"></rect><rect x="166" y="10" width="30" height="22" fill="#007A64"></rect><rect x="30" y="36" width="30" height="22" fill="#99E6D8"></rect><rect x="64" y="36" width="30" height="22" fill="#E6FAF6"></rect><rect x="98" y="36" width="30" height="22" fill="#00A98C"></rect><rect x="132" y="36" width="30" height="22" fill="#007A64"></rect><rect x="166" y="36" width="30" height="22" fill="#33C9AE"></rect><rect x="30" y="62" width="30" height="22" fill="#33C9AE"></rect><rect x="64" y="62" width="30" height="22" fill="#00A98C"></rect><rect x="98" y="62" width="30" height="22" fill="#E6FAF6"></rect><rect x="132" y="62" width="30" height="22" fill="#99E6D8"></rect><rect x="166" y="62" width="30" height="22" fill="#00A98C"></rect></g><g font-size="9" fill="#536274"><text x="4" y="25">월</text><text x="4" y="51">화</text><text x="4" y="77">수</text><text x="30" y="100">오전</text><text x="98" y="100">오후</text><text x="166" y="100">저녁</text></g></svg></div>
+</div>
+</section>
+
+<section aria-label="항목 비교 그래프">
+<h2 class="h2" style="margin-bottom: 10px">3. 항목 비교</h2>
+<div class="cg">
+<div class="card cc"><h3 class="h3">세로 막대</h3><p class="lbl">범주 7개 이하 + 숫자 1개.</p>
+<svg viewBox="0 0 240 120" width="100%" role="img" aria-label="세로 막대 그래프 예시"><line x1="10" y1="100" x2="230" y2="100" stroke="#CBD5E1"></line><g fill="#00A98C"><rect x="22" y="40" width="28" height="60"></rect><rect x="66" y="55" width="28" height="45"></rect><rect x="110" y="70" width="28" height="30"></rect><rect x="154" y="78" width="28" height="22"></rect><rect x="198" y="88" width="24" height="12"></rect></g><g font-size="9" fill="#0F172A" text-anchor="middle"><text x="36" y="36">62</text><text x="80" y="51">48</text><text x="124" y="66">31</text><text x="168" y="74">22</text><text x="210" y="84">12</text></g></svg></div>
+<div class="card cc"><h3 class="h3">가로 막대 (순위)</h3><p class="lbl">범주 8~20개, 긴 이름. 큰 값부터 정렬.</p>
+<svg viewBox="0 0 240 120" width="100%" role="img" aria-label="가로 막대 순위 예시"><g fill="#00A98C"><rect x="60" y="8" width="150" height="14"></rect><rect x="60" y="30" width="120" height="14"></rect><rect x="60" y="52" width="92" height="14"></rect><rect x="60" y="74" width="60" height="14"></rect><rect x="60" y="96" width="34" height="14"></rect></g><g font-size="9" fill="#0F172A"><text x="6" y="19">상품 1</text><text x="6" y="41">상품 2</text><text x="6" y="63">상품 3</text><text x="6" y="85">상품 4</text><text x="6" y="107">상품 5</text></g></svg></div>
+<div class="card cc"><h3 class="h3">상위 N + 기타</h3><p class="lbl">범주 21개 이상이면 상위 10개만 보이고 나머지는 "기타"로 묶음.</p>
+<svg viewBox="0 0 240 120" width="100%" role="img" aria-label="상위 N과 기타 예시"><g fill="#00A98C"><rect x="60" y="8" width="150" height="12"></rect><rect x="60" y="26" width="120" height="12"></rect><rect x="60" y="44" width="92" height="12"></rect><rect x="60" y="62" width="70" height="12"></rect></g><rect x="60" y="86" width="100" height="12" fill="#94A3B8"></rect><g font-size="9" fill="#0F172A"><text x="6" y="18">1위</text><text x="6" y="36">2위</text><text x="6" y="54">3위</text><text x="6" y="72">…</text><text x="6" y="96">기타 38개</text></g></svg></div>
+<div class="card cc"><h3 class="h3">묶음 막대</h3><p class="lbl">범주 2개 + 숫자. 그룹 안에서 값끼리 비교.</p>
+<svg viewBox="0 0 240 120" width="100%" role="img" aria-label="묶음 막대 예시"><line x1="10" y1="100" x2="230" y2="100" stroke="#CBD5E1"></line><g><rect x="24" y="50" width="16" height="50" fill="#00A98C"></rect><rect x="42" y="64" width="16" height="36" fill="#2563EB"></rect><rect x="94" y="40" width="16" height="60" fill="#00A98C"></rect><rect x="112" y="58" width="16" height="42" fill="#2563EB"></rect><rect x="164" y="60" width="16" height="40" fill="#00A98C"></rect><rect x="182" y="46" width="16" height="54" fill="#2563EB"></rect></g><g font-size="9" fill="#536274" text-anchor="middle"><text x="41" y="113">1월</text><text x="111" y="113">2월</text><text x="181" y="113">3월</text></g></svg></div>
+<div class="card cc"><h3 class="h3">누적 막대</h3><p class="lbl">합계와 구성을 함께 볼 때. 구성 비교만 필요하면 100% 누적.</p>
+<svg viewBox="0 0 240 120" width="100%" role="img" aria-label="누적 막대 예시"><line x1="10" y1="100" x2="230" y2="100" stroke="#CBD5E1"></line><g><rect x="30" y="60" width="34" height="40" fill="#00A98C"></rect><rect x="30" y="38" width="34" height="22" fill="#2563EB"></rect><rect x="30" y="26" width="34" height="12" fill="#F59E0B"></rect><rect x="100" y="48" width="34" height="52" fill="#00A98C"></rect><rect x="100" y="30" width="34" height="18" fill="#2563EB"></rect><rect x="100" y="20" width="34" height="10" fill="#F59E0B"></rect><rect x="170" y="40" width="34" height="60" fill="#00A98C"></rect><rect x="170" y="22" width="34" height="18" fill="#2563EB"></rect><rect x="170" y="8" width="34" height="14" fill="#F59E0B"></rect></g></svg></div>
+<div class="card cc"><h3 class="h3">불릿 (목표 대비)</h3><p class="lbl">목표값이 있는 지표. 달성률은 숫자로도 표시.</p>
+<svg viewBox="0 0 240 120" width="100%" role="img" aria-label="불릿 그래프 예시"><rect x="20" y="30" width="200" height="22" fill="#E2E8F0"></rect><rect x="20" y="36" width="150" height="10" fill="#007A64"></rect><rect x="188" y="26" width="3" height="30" fill="#0F172A"></rect><text x="20" y="74" font-size="10" fill="#0F172A">달성 75% · 검은 선 = 목표</text><rect x="20" y="86" width="200" height="22" fill="#E2E8F0"></rect><rect x="20" y="92" width="200" height="10" fill="#007A64"></rect></svg></div>
+</div>
+</section>
+
+<section aria-label="구성 비율과 증감 그래프">
+<h2 class="h2" style="margin-bottom: 10px">4. 구성 비율 · 증감 · 전환</h2>
+<div class="cg">
+<div class="card cc"><h3 class="h3">도넛</h3><p class="lbl">합계 100%인 구성. 항목 5개 이하만. 6개 이상이면 가로 막대.</p>
+<svg viewBox="0 0 240 120" width="100%" role="img" aria-label="도넛 그래프 예시"><g transform="translate(60 60) rotate(-90)" fill="none" stroke-width="20"><circle r="38" stroke="#00A98C" stroke-dasharray="107.4 238.8"></circle><circle r="38" stroke="#2563EB" stroke-dasharray="71.6 238.8" stroke-dashoffset="-107.4"></circle><circle r="38" stroke="#F59E0B" stroke-dasharray="40.6 238.8" stroke-dashoffset="-179"></circle><circle r="38" stroke="#94A3B8" stroke-dasharray="19.2 238.8" stroke-dashoffset="-219.6"></circle></g><g font-size="10" fill="#0F172A"><text x="124" y="40">A 45%</text><text x="124" y="60">B 30%</text><text x="124" y="80">C 17%</text><text x="124" y="100">기타 8%</text></g></svg></div>
+<div class="card cc"><h3 class="h3">100% 누적 막대</h3><p class="lbl">시간에 따른 구성 비율 변화.</p>
+<svg viewBox="0 0 240 120" width="100%" role="img" aria-label="100퍼센트 누적 막대 예시"><g><rect x="20" y="10" width="200" height="22" fill="#00A98C"></rect><rect x="20" y="10" width="90" height="22" fill="#007A64"></rect><rect x="20" y="44" width="200" height="22" fill="#00A98C"></rect><rect x="20" y="44" width="70" height="22" fill="#007A64"></rect><rect x="20" y="78" width="200" height="22" fill="#00A98C"></rect><rect x="20" y="78" width="55" height="22" fill="#007A64"></rect></g><g font-size="9" fill="#FFFFFF"><text x="26" y="25">45%</text><text x="26" y="59">35%</text><text x="26" y="93">27%</text></g></svg></div>
+<div class="card cc"><h3 class="h3">워터폴</h3><p class="lbl">시작값에서 증감 요인을 거쳐 끝값이 되는 과정.</p>
+<svg viewBox="0 0 240 120" width="100%" role="img" aria-label="워터폴 예시"><line x1="10" y1="100" x2="230" y2="100" stroke="#CBD5E1"></line><rect x="20" y="40" width="28" height="60" fill="#475569"></rect><rect x="62" y="28" width="28" height="12" fill="#007A64"></rect><rect x="104" y="28" width="28" height="26" fill="#BE123C"></rect><rect x="146" y="20" width="28" height="8" fill="#007A64"></rect><rect x="188" y="20" width="28" height="80" fill="#475569"></rect><g font-size="9" fill="#536274" text-anchor="middle"><text x="34" y="113">시작</text><text x="76" y="113">+광고</text><text x="118" y="113">-환불</text><text x="160" y="113">+신규</text><text x="202" y="113">끝</text></g></svg></div>
+<div class="card cc"><h3 class="h3">퍼널</h3><p class="lbl">방문 → 장바구니 → 결제처럼 단계가 줄어드는 전환.</p>
+<svg viewBox="0 0 240 120" width="100%" role="img" aria-label="퍼널 예시"><rect x="20" y="10" width="200" height="24" fill="#007A64"></rect><rect x="50" y="42" width="140" height="24" fill="#00A98C"></rect><rect x="80" y="74" width="80" height="24" fill="#33C9AE"></rect><g font-size="10"><text x="30" y="26" fill="#FFFFFF">방문 100%</text><text x="60" y="58" fill="#0F172A">장바구니 70%</text><text x="90" y="90" fill="#0F172A">결제 40%</text></g></svg></div>
+<div class="card cc"><h3 class="h3">코호트 히트맵</h3><p class="lbl">가입 시점별 재방문율처럼 날짜 × 날짜 구조.</p>
+<svg viewBox="0 0 240 120" width="100%" role="img" aria-label="코호트 히트맵 예시"><g><rect x="30" y="8" width="40" height="20" fill="#007A64"></rect><rect x="74" y="8" width="40" height="20" fill="#33C9AE"></rect><rect x="118" y="8" width="40" height="20" fill="#99E6D8"></rect><rect x="162" y="8" width="40" height="20" fill="#E6FAF6"></rect><rect x="30" y="32" width="40" height="20" fill="#007A64"></rect><rect x="74" y="32" width="40" height="20" fill="#00A98C"></rect><rect x="118" y="32" width="40" height="20" fill="#99E6D8"></rect><rect x="30" y="56" width="40" height="20" fill="#007A64"></rect><rect x="74" y="56" width="40" height="20" fill="#33C9AE"></rect></g><g font-size="9" fill="#536274"><text x="2" y="22">1월</text><text x="2" y="46">2월</text><text x="2" y="70">3월</text><text x="30" y="96">0주</text><text x="74" y="96">1주</text><text x="118" y="96">2주</text></g></svg></div>
+</div>
+</section>
+
+<section aria-label="분포와 관계 그래프">
+<h2 class="h2" style="margin-bottom: 10px">5. 분포 · 관계</h2>
+<div class="cg">
+<div class="card cc"><h3 class="h3">히스토그램</h3><p class="lbl">숫자 1개의 분포. 이상치 확인에도 사용.</p>
+<svg viewBox="0 0 240 120" width="100%" role="img" aria-label="히스토그램 예시"><line x1="10" y1="100" x2="230" y2="100" stroke="#CBD5E1"></line><g fill="#00A98C"><rect x="20" y="86" width="24" height="14"></rect><rect x="46" y="66" width="24" height="34"></rect><rect x="72" y="36" width="24" height="64"></rect><rect x="98" y="20" width="24" height="80"></rect><rect x="124" y="40" width="24" height="60"></rect><rect x="150" y="70" width="24" height="30"></rect><rect x="176" y="90" width="24" height="10"></rect></g><circle cx="218" cy="96" r="3" fill="#BE123C"></circle><text x="196" y="86" font-size="9" fill="#9F1239">이상치</text></svg></div>
+<div class="card cc"><h3 class="h3">상자 그림</h3><p class="lbl">범주별 분포를 한눈에 비교(중앙값·사분위·이상치).</p>
+<svg viewBox="0 0 240 120" width="100%" role="img" aria-label="상자 그림 예시"><g stroke="#0F172A" fill="#99E6D8"><line x1="50" y1="20" x2="50" y2="95"></line><rect x="36" y="45" width="28" height="30"></rect><line x1="36" y1="60" x2="64" y2="60"></line><line x1="120" y1="30" x2="120" y2="100"></line><rect x="106" y="50" width="28" height="34"></rect><line x1="106" y1="68" x2="134" y2="68"></line><line x1="190" y1="40" x2="190" y2="90"></line><rect x="176" y="55" width="28" height="22"></rect><line x1="176" y1="65" x2="204" y2="65"></line></g><circle cx="190" cy="22" r="3" fill="#BE123C"></circle><g font-size="9" fill="#536274" text-anchor="middle"><text x="50" y="113">A</text><text x="120" y="113">B</text><text x="190" y="113">C</text></g></svg></div>
+<div class="card cc"><h3 class="h3">산점도</h3><p class="lbl">숫자 2개의 관계. 예: 광고비와 매출. 추세선 옵션.</p>
+<svg viewBox="0 0 240 120" width="100%" role="img" aria-label="산점도 예시"><line x1="20" y1="100" x2="230" y2="100" stroke="#CBD5E1"></line><line x1="20" y1="10" x2="20" y2="100" stroke="#CBD5E1"></line><g fill="#2563EB"><circle cx="45" cy="86" r="4"></circle><circle cx="70" cy="76" r="4"></circle><circle cx="90" cy="80" r="4"></circle><circle cx="115" cy="60" r="4"></circle><circle cx="140" cy="56" r="4"></circle><circle cx="165" cy="40" r="4"></circle><circle cx="190" cy="30" r="4"></circle></g><line x1="35" y1="90" x2="205" y2="26" stroke="#0F172A" stroke-dasharray="4 3"></line></svg></div>
+<div class="card cc"><h3 class="h3">버블</h3><p class="lbl">숫자 3개. 가로·세로 위치와 원 크기로 표현.</p>
+<svg viewBox="0 0 240 120" width="100%" role="img" aria-label="버블 그래프 예시"><line x1="20" y1="100" x2="230" y2="100" stroke="#CBD5E1"></line><line x1="20" y1="10" x2="20" y2="100" stroke="#CBD5E1"></line><g fill="#00A98C" fill-opacity="0.7" stroke="#007A64"><circle cx="60" cy="70" r="10"></circle><circle cx="110" cy="50" r="18"></circle><circle cx="170" cy="62" r="8"></circle><circle cx="200" cy="28" r="14"></circle></g></svg></div>
+</div>
+</section>
+
+<section aria-label="단일 지표와 표">
+<h2 class="h2" style="margin-bottom: 10px">6. 단일 지표 · 표 · 게이지</h2>
+<div class="cg">
+<div class="card cc"><h3 class="h3">KPI 카드 + 스파크라인</h3><p class="lbl">숫자 1개의 현재값과 변화.</p>
+<svg viewBox="0 0 240 120" width="100%" role="img" aria-label="KPI 카드 예시"><text x="10" y="40" font-size="26" font-weight="700" fill="#0F172A" font-family="JetBrains Mono, monospace">3,280,000원</text><text x="10" y="62" font-size="11" fill="#065F46">▲ 12.4% 지난달 대비</text><polyline fill="none" stroke="#00A98C" stroke-width="2" points="10,104 40,98 70,100 100,90 130,92 160,82 190,84 230,70"></polyline></svg></div>
+<div class="card cc"><h3 class="h3">게이지</h3><p class="lbl">0~100% 달성률 하나만 있을 때. 값이 여러 개면 불릿.</p>
+<svg viewBox="0 0 240 120" width="100%" role="img" aria-label="게이지 예시"><path d="M40,100 A80,80 0 0 1 200,100" fill="none" stroke="#E2E8F0" stroke-width="18"></path><path d="M40,100 A80,80 0 0 1 164,36" fill="none" stroke="#007A64" stroke-width="18"></path><text x="120" y="96" font-size="24" font-weight="700" text-anchor="middle" fill="#0F172A" font-family="JetBrains Mono, monospace">72%</text></svg></div>
+<div class="card cc"><h3 class="h3">조건부 서식 표</h3><p class="lbl">행 수가 적거나(5행 이하) 정확한 값이 중요할 때.</p>
+<svg viewBox="0 0 240 120" width="100%" role="img" aria-label="표 예시"><g font-size="9" fill="#536274"><text x="10" y="14">채널</text><text x="110" y="14">매출</text><text x="180" y="14">ROAS</text></g><g font-size="10" fill="#0F172A"><text x="10" y="40">채널 A</text><text x="110" y="40">1.4M</text><text x="10" y="66">채널 B</text><text x="110" y="66">0.9M</text><text x="10" y="92">채널 C</text><text x="110" y="92">0.5M</text></g><rect x="170" y="26" width="50" height="20" fill="#99E6D8"></rect><rect x="170" y="52" width="50" height="20" fill="#E6FAF6"></rect><rect x="170" y="78" width="50" height="20" fill="#FECDD3"></rect><g font-size="10" fill="#0F172A"><text x="180" y="40">6.2</text><text x="180" y="66">4.8</text><text x="180" y="92">2.0</text></g></svg></div>
+</div>
+</section>
+
+<section aria-label="예외 상태">
+<h2 class="h2" style="margin-bottom: 4px">7. 예외 상태 — 데이터가 이상할 때 그래프가 하는 일</h2>
+<p class="lbl" style="margin: 0 0 10px">어떤 데이터가 와도 빈 화면이나 깨진 그래프가 나오지 않도록 아래 규칙을 적용합니다.</p>
+<div class="cg">
+<sc-for list="{{ edge }}" as="e" hint-placeholder-count="9">
+<div class="card cc" style="border-style: dashed">
+<h3 class="h3">{{ e.title }}</h3>
+<p class="lbl">조건: {{ e.cond }}</p>
+<p>{{ e.rule }}</p>
+</div>
+</sc-for>
+</div>
+</section>
+<p class="lbl" style="margin: 0">※ 모든 그래프와 수치는 구조를 보여주기 위한 샘플이며 실제 데이터가 아닙니다. 색 외에도 선 모양·라벨·위치로 구분됩니다.</p>
+</main>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":4200}}'>
+class Component extends DCLogic {
+renderVals() {
+return {
+nav: [
+{ label: '대시보드', icon: 'M5 20V10M12 20V4M19 20v-7', cls: '', href: 'Home.dc.html', cur: 'false', open: false, children: [{ label: '1. 문제 정의·목표 설정', href: 'Steps.dc.html', cls: '', pick: null }, { label: '2. 데이터 수집', href: 'Steps.dc.html', cls: '', pick: null }, { label: '3. 전처리·정제', href: 'Check.dc.html', cls: '', pick: null }, { label: '4. 탐색적 분석(EDA)', href: 'Steps.dc.html', cls: '', pick: null }, { label: '5. 모델링·심층 분석', href: 'Steps.dc.html', cls: '', pick: null }, { label: '6. 결과 해석·시각화', href: 'Steps.dc.html', cls: '', pick: null }, { label: '7. 자동화·파이프라인', href: 'Steps.dc.html', cls: '', pick: null }] },
+{ label: '업로드', icon: 'M12 16V4M7 9l5-5 5 5M4 20h16', cls: '', href: 'Upload.dc.html', cur: 'false', open: false, children: [{ label: '1. 문제 정의·목표 설정', href: 'Steps.dc.html', cls: '', pick: null }, { label: '2. 데이터 수집', href: 'Steps.dc.html', cls: '', pick: null }, { label: '3. 전처리·정제', href: 'Check.dc.html', cls: '', pick: null }, { label: '4. 탐색적 분석(EDA)', href: 'Steps.dc.html', cls: '', pick: null }, { label: '5. 모델링·심층 분석', href: 'Steps.dc.html', cls: '', pick: null }, { label: '6. 결과 해석·시각화', href: 'Steps.dc.html', cls: '', pick: null }, { label: '7. 자동화·파이프라인', href: 'Steps.dc.html', cls: '', pick: null }] },
+{ label: '프로젝트', icon: 'M3 7h6l2 2h10v10H3z', cls: '', href: 'Projects.dc.html', cur: 'false', open: false, children: [{ label: '1. 문제 정의·목표 설정', href: 'Steps.dc.html', cls: '', pick: null }, { label: '2. 데이터 수집', href: 'Steps.dc.html', cls: '', pick: null }, { label: '3. 전처리·정제', href: 'Check.dc.html', cls: '', pick: null }, { label: '4. 탐색적 분석(EDA)', href: 'Steps.dc.html', cls: '', pick: null }, { label: '5. 모델링·심층 분석', href: 'Steps.dc.html', cls: '', pick: null }, { label: '6. 결과 해석·시각화', href: 'Steps.dc.html', cls: '', pick: null }, { label: '7. 자동화·파이프라인', href: 'Steps.dc.html', cls: '', pick: null }] },
+{ label: '데이터분석단계', icon: 'M4 6h16M4 12h16M4 18h10', cls: '', href: 'Steps.dc.html', cur: 'false', open: false, children: [{ label: '1. 문제 정의·목표 설정', href: 'Steps.dc.html', cls: '', pick: null }, { label: '2. 데이터 수집', href: 'Steps.dc.html', cls: '', pick: null }, { label: '3. 전처리·정제', href: 'Check.dc.html', cls: '', pick: null }, { label: '4. 탐색적 분석(EDA)', href: 'Steps.dc.html', cls: '', pick: null }, { label: '5. 모델링·심층 분석', href: 'Steps.dc.html', cls: '', pick: null }, { label: '6. 결과 해석·시각화', href: 'Steps.dc.html', cls: '', pick: null }, { label: '7. 자동화·파이프라인', href: 'Steps.dc.html', cls: '', pick: null }] },
+{ label: '리포트', icon: 'M7 3h7l5 5v13H7zM14 3v5h5', cls: 'on', href: 'Charts.dc.html', cur: 'page', open: false, children: [{ label: '1. 문제 정의·목표 설정', href: 'Steps.dc.html', cls: '', pick: null }, { label: '2. 데이터 수집', href: 'Steps.dc.html', cls: '', pick: null }, { label: '3. 전처리·정제', href: 'Check.dc.html', cls: '', pick: null }, { label: '4. 탐색적 분석(EDA)', href: 'Steps.dc.html', cls: '', pick: null }, { label: '5. 모델링·심층 분석', href: 'Steps.dc.html', cls: '', pick: null }, { label: '6. 결과 해석·시각화', href: 'Steps.dc.html', cls: '', pick: null }, { label: '7. 자동화·파이프라인', href: 'Steps.dc.html', cls: '', pick: null }] }
+],
+rules: [
+{ cond: '날짜 1 + 숫자 1', main: '선 그래프', alt: '영역, 막대', note: '날짜 간격이 불규칙하면 일/주/월로 묶기' },
+{ cond: '날짜 1 + 같은 단위 숫자 2~4', main: '다중 선', alt: '누적 영역', note: '5개 이상은 작은 다중 그래프' },
+{ cond: '날짜 1 + 단위가 다른 숫자 2', main: '콤보(이중 축)', alt: '작은 다중 그래프', note: '축마다 단위 표기 필수' },
+{ cond: '범주(7개 이하) + 숫자 1', main: '세로 막대', alt: '도넛(합계 100%일 때)', note: '막대는 항상 0에서 시작' },
+{ cond: '범주(8~20개) + 숫자 1', main: '가로 막대(정렬)', alt: '표', note: '긴 이름은 가로 막대가 읽기 쉬움' },
+{ cond: '범주(21개 이상) + 숫자 1', main: '상위 10 + 기타', alt: '표(검색 가능)', note: '"기타" 클릭 시 전체 보기' },
+{ cond: '범주 2 + 숫자 1', main: '묶음/누적 막대', alt: '히트맵', note: '범주 합 20개 초과는 히트맵' },
+{ cond: '숫자 1(분포)', main: '히스토그램', alt: '상자 그림', note: '구간 수는 자동, 조절 가능' },
+{ cond: '숫자 2', main: '산점도', alt: '버블(숫자 3개일 때)', note: '점 1,000개 초과 시 밀도 표시' },
+{ cond: '숫자 + 목표값', main: '불릿', alt: '게이지', note: '목표 없으면 사용 불가' },
+{ cond: '시작값 + 증감 항목들', main: '워터폴', alt: '표', note: '증감 합이 끝값과 같아야 함' },
+{ cond: '단계 컬럼(순서 있음)', main: '퍼널', alt: '가로 막대', note: '단계가 늘어나면 안 되는 데이터는 제외' },
+{ cond: '날짜 + 날짜(코호트)', main: '코호트 히트맵', alt: '다중 선', note: '행 수가 충분할 때만' },
+{ cond: '숫자 1(현재값)', main: 'KPI 카드', alt: '게이지', note: '비교 기간이 있으면 증감 표시' }
+],
+edge: [
+{ title: '데이터 없음', cond: '선택한 기간·필터에 행 0개', rule: '그래프 자리에 "조건에 맞는 데이터가 없습니다"와 필터 초기화 버튼을 보여줍니다.' },
+{ title: '행이 너무 적음', cond: '행 5개 이하', rule: '추세 그래프 대신 값이 보이는 표나 KPI 카드로 바꿉니다.' },
+{ title: '범주가 너무 많음', cond: '고유값 21개 이상', rule: '상위 10개 + 기타로 묶고, 전체 보기는 표로 제공합니다.' },
+{ title: '음수 포함', cond: '숫자에 음수 존재', rule: '기준선(0)을 그리고 음수는 다른 색·방향으로 표시합니다. 도넛은 사용하지 않습니다.' },
+{ title: '결측 구간', cond: '날짜 중간에 값이 비어 있음', rule: '선을 끊고 빈 구간을 점선으로 표시합니다. 0으로 채우지 않고 안내 문구를 붙입니다.' },
+{ title: '이상치', cond: '평균에서 크게 벗어난 값', rule: '점을 강조하고 "이상치 제외하고 보기" 토글을 제공합니다.' },
+{ title: '값 하나가 압도적', cond: '최댓값이 나머지의 20배 이상', rule: '로그 축 제안 또는 상위 항목을 분리해서 보여줍니다.' },
+{ title: '단위가 섞임', cond: '원·%·건이 한 그래프에 필요', rule: '자동으로 이중 축 또는 작은 다중 그래프로 분리합니다. 3개 단위 이상은 분리만 허용합니다.' },
+{ title: '로딩·오류', cond: '계산 중이거나 실패', rule: '로딩은 회색 뼈대 화면, 오류는 원인 한 줄과 "다시 시도" 버튼을 보여줍니다.' }
+]
+};
+}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>데이터분석단계 · 7단계 프로세스</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+:root{--bg:#F4F7F8;--ink:#0F172A;--sub:#475569;--mut:#536274;--line:#E2E8F0;--pri:#007A64;--mint:#00C9A7;--denim:#2563EB;--amber:#F59E0B;--coral:#F43F5E;--fb:14px;--ft:20px;--fk:24px;--fs:12px;--gut:16px}
+@media (min-width:768px){:root{--fb:15px;--ft:24px;--fk:28px;--fs:12.5px;--gut:20px}}
+@media (min-width:1200px){:root{--fb:16px;--ft:28px;--fk:32px;--fs:13px;--gut:24px}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Noto Sans KR',system-ui,sans-serif;font-size:var(--fb);line-height:1.5}
+.mono{font-family:'JetBrains Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.lbl{font-size:var(--fs);color:var(--mut)}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px}
+.h1{margin:0;font-size:var(--ft);font-weight:700;line-height:1.25}
+.h2{margin:0;font-size:calc(var(--fb) + 2px);font-weight:700}
+.h3{margin:0;font-size:var(--fb);font-weight:700}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;min-width:44px;padding:0 16px;border-radius:8px;border:1px solid #CBD5E1;background:#fff;color:var(--ink);font:inherit;font-size:var(--fs);font-weight:500;cursor:pointer;text-decoration:none}
+.btn.pri{background:var(--pri);border-color:var(--pri);color:#fff}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;background:#FEF3C7;color:#78350F;font-size:var(--fs);font-weight:500}
+.nav{display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:8px;color:var(--sub);text-decoration:none;font-size:var(--fb)}
+.nav:hover{background:#F1F5F9}
+.nav.on{background:#E6FAF6;color:#00574A;font-weight:700}
+.subnav{display:flex;flex-direction:column;gap:2px;margin:2px 0 6px 18px;padding-left:10px;border-left:2px solid #E2E8F0}
+.sub-a{display:flex;align-items:center;min-height:44px;padding:0 10px;border-radius:8px;color:var(--sub);text-decoration:none;font-size:var(--fs)}
+.sub-a:hover{background:#F1F5F9}
+.sub-a.on{background:#E6FAF6;color:#00574A;font-weight:700}
+.top{display:flex;align-items:center;flex-wrap:wrap;gap:12px;padding:10px var(--gut);background:#fff;border-bottom:1px solid var(--line)}
+.row{display:flex;flex-wrap:wrap;align-items:flex-start}
+.side{flex:0 0 232px;padding:16px;background:#fff;border-right:1px solid var(--line);align-self:stretch}
+.main{flex:999 1 560px;min-width:0;padding:var(--gut);display:flex;flex-direction:column;gap:var(--gut)}
+.g2{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:var(--gut)}
+.ov{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--gut)}
+.stp{display:flex;align-items:flex-start;overflow-x:auto;padding:4px 2px 8px}
+.stn{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:6px;width:92px;background:transparent;border:0;padding:0;font:inherit;color:inherit;cursor:pointer}
+.dot{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;border:2px solid #CBD5E1;background:#fff;color:#475569}
+.dot.done{background:#007A64;border-color:#007A64;color:#fff}
+.dot.act{border-color:#007A64;color:#00574A;animation:pulse 1.4s ease-out infinite}
+.stl{font-size:var(--fs);text-align:center;color:var(--mut);line-height:1.3}
+.stl.act{color:#00574A;font-weight:700}
+.ln{flex:1 0 24px;height:4px;margin-top:20px;border-radius:2px;background:#E2E8F0;overflow:hidden}
+.ln i{display:block;height:4px;background:#007A64;transition:width .7s ease}
+.stage{border:1px solid var(--line);border-radius:12px;background:#F8FAFC;overflow:hidden}
+.stage svg{display:block;width:100%;height:auto}
+.stage text{font-family:'Noto Sans KR',system-ui,sans-serif}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(0,169,140,.5)}100%{box-shadow:0 0 0 14px rgba(0,169,140,0)}}
+@keyframes pop{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:scale(1)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes ripple{0%{opacity:.6;transform:scale(.6)}100%{opacity:0;transform:scale(1.6)}}
+@keyframes trav{0%{opacity:0;transform:translate(0,0)}12%{opacity:1}88%{opacity:1}100%{opacity:0;transform:translate(var(--dx),var(--dy))}}
+@keyframes grow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes draw{from{stroke-dashoffset:var(--len)}to{stroke-dashoffset:0}}
+@keyframes fixcell{0%,35%{fill:#FFE4E6}60%,100%{fill:#DCFCE7}}
+@keyframes hideold{0%,35%{opacity:1}55%,100%{opacity:0}}
+@keyframes shownew{0%,45%{opacity:0}65%,100%{opacity:1}}
+@keyframes rowout{0%,45%{opacity:1}80%,100%{opacity:.15}}
+@keyframes strike{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes lit{0%{fill:#fff}100%{fill:#E6FAF6}}
+@keyframes mv{0%{transform:translateX(0)}100%{transform:translateX(var(--dx))}}
+.an{animation-fill-mode:both;transform-box:fill-box;transform-origin:center}
+.anb{animation-fill-mode:both;transform-box:fill-box;transform-origin:bottom}
+.anl{animation-fill-mode:both;transform-box:fill-box;transform-origin:left}
+@media (prefers-reduced-motion: reduce){.an,.anb,.anl,.dot.act,[class*="anim"]{animation:none !important}}
+@media (max-width:1199px){.g2{grid-template-columns:minmax(0,1fr)}.ov{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:767px){.ov{grid-template-columns:minmax(0,1fr)}.side{flex:1 1 100%}}
+</style>
+</helmet>
+<div style="display: flex; flex-direction: column; background: #F4F7F8; min-height: 1500px">
+<header class="top">
+<div style="display: flex; align-items: center; gap: 10px">
+<span aria-hidden="true" style="width: 32px; height: 32px; border-radius: 8px; background: #007A64; display: inline-flex; align-items: center; justify-content: center">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V10M12 20V4M19 20v-7"></path></svg>
+</span>
+<strong style="font-size: 16px">[서비스명]</strong>
+</div>
+<nav aria-label="현재 위치" class="lbl" style="margin-left: 12px">[프로젝트명] / <strong style="color: #0F172A">데이터분석단계</strong></nav>
+<div style="flex-grow: 1"></div>
+<span class="badge">샘플 화면</span>
+</header>
+<div class="row" style="flex-grow: 1">
+<aside class="side" aria-label="메뉴">
+<nav style="display: flex; flex-direction: column; gap: 4px" aria-label="주요 메뉴">
+<sc-for list="{{ nav }}" as="n" hint-placeholder-count="5">
+<a class="nav {{ n.cls }}" href="{{ n.href }}" aria-current="{{ n.cur }}">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ n.icon }}"></path></svg>
+<span>{{ n.label }}</span>
+</a>
+<sc-if value="{{ n.open }}" hint-placeholder-val="{{ false }}">
+<div class="subnav">
+<sc-for list="{{ n.children }}" as="c" hint-placeholder-count="7">
+<a class="sub-a {{ c.cls }}" href="{{ c.href }}" onClick="{{ c.pick }}">{{ c.label }}</a>
+</sc-for>
+</div>
+</sc-if>
+</sc-for>
+</nav>
+</aside>
+<main class="main">
+<div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px">
+<div style="flex: 1 1 320px">
+<h1 class="h1">데이터분석단계</h1>
+<p class="lbl" style="margin: 4px 0 0">원천 데이터를 인사이트로 바꾸는 7단계를 순서대로 보여줍니다. 단계를 눌러 직접 살펴볼 수도 있습니다.</p>
+</div>
+<div style="display: flex; gap: 8px; flex-wrap: wrap">
+<button class="btn" type="button" onClick="{{ prev }}" aria-label="이전 단계">이전</button>
+<button class="btn pri" type="button" onClick="{{ togglePlay }}" aria-pressed="{{ playPressed }}">{{ playLabel }}</button>
+<button class="btn" type="button" onClick="{{ next }}" aria-label="다음 단계">다음</button>
+<button class="btn" type="button" onClick="{{ restart }}">처음부터</button>
+</div>
+</div>
+
+<section class="card" aria-label="단계 진행">
+<div class="stp">
+<sc-for list="{{ stepper }}" as="s" hint-placeholder-count="7">
+<button class="stn" type="button" onClick="{{ s.pick }}" aria-label="{{ s.aria }}">
+<span class="dot {{ s.dot }}">{{ s.mark }}</span>
+<span class="stl {{ s.lab }}">{{ s.title }}</span>
+</button>
+<sc-if value="{{ s.hasLine }}" hint-placeholder-val="{{ true }}">
+<div class="ln" aria-hidden="true"><i style="width: {{ s.fill }}"></i></div>
+</sc-if>
+</sc-for>
+</div>
+</section>
+
+<div class="g2">
+<section class="card" aria-label="단계 애니메이션">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 10px; flex-wrap: wrap">
+<h2 class="h2">{{ cur.no }}단계 · {{ cur.title }}</h2>
+<span class="lbl mono">{{ cur.en }}</span>
+</div>
+<div class="stage">
+
+<sc-if value="{{ is1 }}" hint-placeholder-val="{{ true }}">
+<svg viewBox="0 0 480 260" role="img" aria-label="과녁 중심에 KPI와 가설이 놓이는 문제 정의 애니메이션">
+<g transform="translate(130 130)">
+<circle class="an" r="95" fill="#E6FAF6" stroke="#9FE8D8" style="animation: pop .6s ease-out .1s"></circle>
+<circle class="an" r="68" fill="#CCF3EA" stroke="#66D9C0" style="animation: pop .6s ease-out .4s"></circle>
+<circle class="an" r="40" fill="#99E6D8" stroke="#00A98C" style="animation: pop .6s ease-out .7s"></circle>
+<circle class="an" r="14" fill="#007A64" style="animation: pop .5s ease-out 1s"></circle>
+<circle class="an" r="30" fill="none" stroke="#007A64" stroke-width="2" style="animation: ripple 1.8s ease-out 1.3s infinite"></circle>
+</g>
+<g font-size="15">
+<g class="an" style="animation: fadeUp .6s ease-out 1.2s"><rect x="260" y="50" width="200" height="44" rx="10" fill="#fff" stroke="#CBD5E1"></rect><text x="274" y="68" fill="#536274" font-size="11">KPI</text><text x="274" y="86" fill="#0F172A" font-weight="700">재구매율 +10%</text></g>
+<g class="an" style="animation: fadeUp .6s ease-out 1.8s"><rect x="260" y="108" width="200" height="44" rx="10" fill="#fff" stroke="#CBD5E1"></rect><text x="274" y="126" fill="#536274" font-size="11">가설</text><text x="274" y="144" fill="#0F172A" font-weight="700">채널 B 광고 효율이 높다</text></g>
+<g class="an" style="animation: fadeUp .6s ease-out 2.4s"><rect x="260" y="166" width="200" height="44" rx="10" fill="#fff" stroke="#CBD5E1"></rect><text x="274" y="184" fill="#536274" font-size="11">검증 기간</text><text x="274" y="202" fill="#0F172A" font-weight="700">최근 9개월</text></g>
+</g>
+</svg>
+</sc-if>
+
+<sc-if value="{{ is2 }}" hint-placeholder-val="{{ false }}">
+<svg viewBox="0 0 480 260" role="img" aria-label="여러 데이터 출처에서 데이터가 하나의 저장소로 모이는 애니메이션">
+<g font-size="13">
+<rect x="14" y="20" width="120" height="40" rx="8" fill="#fff" stroke="#CBD5E1"></rect><text x="26" y="45" fill="#0F172A">DB (Supabase)</text>
+<rect x="14" y="78" width="120" height="40" rx="8" fill="#fff" stroke="#CBD5E1"></rect><text x="26" y="103" fill="#0F172A">외부 API</text>
+<rect x="14" y="136" width="120" height="40" rx="8" fill="#fff" stroke="#CBD5E1"></rect><text x="26" y="161" fill="#0F172A">로그 파일</text>
+<rect x="14" y="194" width="120" height="40" rx="8" fill="#fff" stroke="#CBD5E1"></rect><text x="26" y="219" fill="#0F172A">웹 크롤링</text>
+</g>
+<g fill="#2563EB">
+<circle class="an" cx="140" cy="40" r="6" style="--dx: 250px; --dy: 86px; animation: trav 2.4s linear 0s infinite"></circle>
+<circle class="an" cx="140" cy="98" r="6" style="--dx: 250px; --dy: 28px; animation: trav 2.4s linear .5s infinite"></circle>
+<circle class="an" cx="140" cy="156" r="6" style="--dx: 250px; --dy: -30px; animation: trav 2.4s linear 1s infinite"></circle>
+<circle class="an" cx="140" cy="214" r="6" style="--dx: 250px; --dy: -88px; animation: trav 2.4s linear 1.5s infinite"></circle>
+<circle class="an" cx="140" cy="40" r="6" style="--dx: 250px; --dy: 86px; animation: trav 2.4s linear 1.2s infinite"></circle>
+<circle class="an" cx="140" cy="156" r="6" style="--dx: 250px; --dy: -30px; animation: trav 2.4s linear 2.2s infinite"></circle>
+</g>
+<g>
+<ellipse cx="415" cy="96" rx="48" ry="14" fill="#99E6D8" stroke="#00A98C"></ellipse>
+<rect x="367" y="96" width="96" height="76" fill="#CCF3EA" stroke="none"></rect>
+<line x1="367" y1="96" x2="367" y2="172" stroke="#00A98C"></line><line x1="463" y1="96" x2="463" y2="172" stroke="#00A98C"></line>
+<ellipse cx="415" cy="172" rx="48" ry="14" fill="#CCF3EA" stroke="#00A98C"></ellipse>
+<ellipse cx="415" cy="96" rx="48" ry="14" fill="#99E6D8" stroke="#00A98C"></ellipse>
+<text x="415" y="140" text-anchor="middle" font-size="13" font-weight="700" fill="#00574A">원천 데이터</text>
+<text x="415" y="206" text-anchor="middle" font-size="12" fill="#536274">정형 + 비정형</text>
+</g>
+</svg>
+</sc-if>
+
+<sc-if value="{{ is3 }}" hint-placeholder-val="{{ false }}">
+<svg viewBox="0 0 480 260" role="img" aria-label="결측값이 채워지고 중복 행이 사라지고 이상치가 정리되는 애니메이션">
+<g font-size="13">
+<rect x="30" y="20" width="420" height="34" fill="#E2E8F0"></rect>
+<text x="46" y="42" font-weight="700" fill="#334155">주문번호</text><text x="196" y="42" font-weight="700" fill="#334155">상품</text><text x="346" y="42" font-weight="700" fill="#334155">금액</text>
+<rect x="30" y="54" width="420" height="38" fill="#fff"></rect>
+<text x="46" y="78" fill="#0F172A" class="mono">A-1001</text><text x="196" y="78" fill="#0F172A">Apple Case</text><text x="346" y="78" fill="#0F172A" class="mono">29,000</text>
+<rect x="30" y="92" width="420" height="38" fill="#fff"></rect>
+<text x="46" y="116" fill="#0F172A" class="mono">A-1002</text><text x="196" y="116" fill="#0F172A">USB-C Cable</text>
+<rect class="an" x="330" y="96" width="112" height="30" rx="4" fill="#FFE4E6" style="animation: fixcell 3s ease-in-out .3s both"></rect>
+<text class="an" x="346" y="116" fill="#881337" style="animation: hideold 3s ease-in-out .3s both">(빈칸)</text>
+<text class="an" x="346" y="116" fill="#14532D" font-weight="700" style="animation: shownew 3s ease-in-out .3s both">0</text>
+<g class="an" style="animation: rowout 3s ease-in-out .6s both">
+<rect x="30" y="130" width="420" height="38" fill="#FFF7E6"></rect>
+<text x="46" y="154" fill="#0F172A" class="mono">A-1001</text><text x="196" y="154" fill="#0F172A">Apple Case</text><text x="346" y="154" fill="#0F172A" class="mono">29,000</text>
+<rect class="anl" x="36" y="148" width="408" height="3" fill="#BE123C" style="animation: strike .8s ease-out 1.6s both"></rect>
+</g>
+<rect x="30" y="168" width="420" height="38" fill="#fff"></rect>
+<text x="46" y="192" fill="#0F172A" class="mono">A-2031</text><text x="196" y="192" fill="#0F172A">Apple Case</text>
+<rect class="an" x="330" y="172" width="112" height="30" rx="4" fill="#FEF3C7" style="animation: fixcell 3s ease-in-out 1.2s both"></rect>
+<text class="an mono" x="346" y="192" fill="#78350F" style="animation: hideold 3s ease-in-out 1.2s both">12,000,000</text>
+<text class="an mono" x="346" y="192" fill="#14532D" font-weight="700" style="animation: shownew 3s ease-in-out 1.2s both">120,000</text>
+</g>
+<g font-size="12" fill="#536274"><text x="30" y="236">결측 채움 → 중복 제거 → 이상치 확인·정정</text></g>
+</svg>
+</sc-if>
+
+<sc-if value="{{ is4 }}" hint-placeholder-val="{{ false }}">
+<svg viewBox="0 0 480 260" role="img" aria-label="분포 막대가 자라나고 산점도에서 상관관계가 드러나는 애니메이션">
+<g transform="translate(20 20)">
+<text x="0" y="8" font-size="12" fill="#536274">분포</text>
+<line x1="0" y1="200" x2="200" y2="200" stroke="#CBD5E1"></line>
+<g fill="#00A98C">
+<rect class="anb" x="8" y="160" width="22" height="40" style="animation: grow .6s ease-out .1s"></rect>
+<rect class="anb" x="34" y="120" width="22" height="80" style="animation: grow .6s ease-out .25s"></rect>
+<rect class="anb" x="60" y="70" width="22" height="130" style="animation: grow .6s ease-out .4s"></rect>
+<rect class="anb" x="86" y="30" width="22" height="170" style="animation: grow .6s ease-out .55s"></rect>
+<rect class="anb" x="112" y="64" width="22" height="136" style="animation: grow .6s ease-out .7s"></rect>
+<rect class="anb" x="138" y="124" width="22" height="76" style="animation: grow .6s ease-out .85s"></rect>
+<rect class="anb" x="164" y="176" width="22" height="24" style="animation: grow .6s ease-out 1s"></rect>
+</g>
+</g>
+<g transform="translate(250 20)">
+<text x="0" y="8" font-size="12" fill="#536274">두 변수의 관계</text>
+<line x1="0" y1="200" x2="210" y2="200" stroke="#CBD5E1"></line><line x1="0" y1="20" x2="0" y2="200" stroke="#CBD5E1"></line>
+<g fill="#2563EB">
+<circle class="an" cx="25" cy="170" r="5" style="animation: pop .4s ease-out 1.1s"></circle>
+<circle class="an" cx="55" cy="150" r="5" style="animation: pop .4s ease-out 1.25s"></circle>
+<circle class="an" cx="80" cy="158" r="5" style="animation: pop .4s ease-out 1.4s"></circle>
+<circle class="an" cx="105" cy="120" r="5" style="animation: pop .4s ease-out 1.55s"></circle>
+<circle class="an" cx="130" cy="108" r="5" style="animation: pop .4s ease-out 1.7s"></circle>
+<circle class="an" cx="155" cy="74" r="5" style="animation: pop .4s ease-out 1.85s"></circle>
+<circle class="an" cx="185" cy="52" r="5" style="animation: pop .4s ease-out 2s"></circle>
+</g>
+<line x1="12" y1="182" x2="198" y2="44" stroke="#0F172A" stroke-width="2" stroke-dasharray="6 4" pathLength="100" class="an" style="--len: 100; animation: fadeUp .6s ease-out 2.3s"></line>
+<g class="an" style="animation: fadeUp .6s ease-out 2.5s"><rect x="110" y="170" width="100" height="26" rx="6" fill="#fff" stroke="#CBD5E1"></rect><text x="160" y="188" text-anchor="middle" font-size="12" fill="#0F172A" class="mono">상관 0.82</text></g>
+</g>
+</svg>
+</sc-if>
+
+<sc-if value="{{ is5 }}" hint-placeholder-val="{{ false }}">
+<svg viewBox="0 0 480 260" role="img" aria-label="과거 추세선이 그려지고 이후 예측 구간이 이어지는 모델링 애니메이션">
+<g stroke="#E2E8F0"><line x1="30" y1="50" x2="450" y2="50"></line><line x1="30" y1="110" x2="450" y2="110"></line><line x1="30" y1="170" x2="450" y2="170"></line></g>
+<line x1="30" y1="210" x2="450" y2="210" stroke="#CBD5E1"></line>
+<line x1="290" y1="30" x2="290" y2="210" stroke="#94A3B8" stroke-dasharray="3 4"></line>
+<text x="296" y="42" font-size="11" fill="#536274">예측 구간</text>
+<polygon class="an" points="290,112 450,52 450,120 290,126" fill="#2563EB" fill-opacity="0.15" style="animation: fadeUp .8s ease-out 2.6s"></polygon>
+<polyline points="30,180 80,168 130,172 180,140 230,128 290,118" fill="none" stroke="#00A98C" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="400" style="--len: 400; animation: draw 2s ease-out .2s both"></polyline>
+<polyline points="290,118 340,100 390,88 450,76" fill="none" stroke="#2563EB" stroke-width="3" stroke-dasharray="8 6" stroke-linecap="round" class="an" style="animation: fadeUp .6s ease-out 2.4s"></polyline>
+<g font-size="12">
+<g class="an" style="animation: pop .4s ease-out 1.2s"><rect x="34" y="226" width="64" height="26" rx="13" fill="#fff" stroke="#CBD5E1"></rect><text x="66" y="243" text-anchor="middle" fill="#0F172A">회귀</text></g>
+<g class="an" style="animation: pop .4s ease-out 1.5s"><rect x="106" y="226" width="64" height="26" rx="13" fill="#fff" stroke="#CBD5E1"></rect><text x="138" y="243" text-anchor="middle" fill="#0F172A">분류</text></g>
+<g class="an" style="animation: pop .4s ease-out 1.8s"><rect x="178" y="226" width="64" height="26" rx="13" fill="#fff" stroke="#CBD5E1"></rect><text x="210" y="243" text-anchor="middle" fill="#0F172A">군집</text></g>
+<g class="an" style="animation: pop .4s ease-out 2.1s"><rect x="250" y="226" width="92" height="26" rx="13" fill="#E8F1FF" stroke="#2563EB"></rect><text x="296" y="243" text-anchor="middle" fill="#1E3A8A">시계열 예측</text></g>
+</g>
+</svg>
+</sc-if>
+
+<sc-if value="{{ is6 }}" hint-placeholder-val="{{ false }}">
+<svg viewBox="0 0 480 260" role="img" aria-label="지표 카드와 차트가 나타나고 실행 가능한 인사이트가 제시되는 애니메이션">
+<g font-size="12">
+<g class="an" style="animation: pop .5s ease-out .1s"><rect x="20" y="16" width="130" height="62" rx="10" fill="#fff" stroke="#CBD5E1"></rect><text x="32" y="38" fill="#536274">총 매출</text><text x="32" y="64" font-size="18" font-weight="700" fill="#0F172A" class="mono">3,280,000원</text></g>
+<g class="an" style="animation: pop .5s ease-out .3s"><rect x="165" y="16" width="130" height="62" rx="10" fill="#fff" stroke="#CBD5E1"></rect><text x="177" y="38" fill="#536274">ROAS</text><text x="177" y="64" font-size="18" font-weight="700" fill="#0F172A" class="mono">4.8배</text></g>
+<g class="an" style="animation: pop .5s ease-out .5s"><rect x="310" y="16" width="150" height="62" rx="10" fill="#fff" stroke="#CBD5E1"></rect><text x="322" y="38" fill="#536274">주문 수</text><text x="322" y="64" font-size="18" font-weight="700" fill="#0F172A" class="mono">1,284건</text></g>
+</g>
+<line x1="30" y1="190" x2="290" y2="190" stroke="#CBD5E1"></line>
+<g fill="#00A98C">
+<rect class="anb" x="44" y="130" width="30" height="60" style="animation: grow .6s ease-out .9s"></rect>
+<rect class="anb" x="92" y="108" width="30" height="82" style="animation: grow .6s ease-out 1.05s"></rect>
+<rect class="anb" x="140" y="136" width="30" height="54" style="animation: grow .6s ease-out 1.2s"></rect>
+<rect class="anb" x="188" y="94" width="30" height="96" style="animation: grow .6s ease-out 1.35s"></rect>
+<rect class="anb" x="236" y="86" width="30" height="104" style="animation: grow .6s ease-out 1.5s"></rect>
+</g>
+<g class="an" style="animation: fadeUp .7s ease-out 2s">
+<rect x="310" y="102" width="150" height="130" rx="10" fill="#E6FAF6" stroke="#9FE8D8"></rect>
+<text x="322" y="124" font-size="12" font-weight="700" fill="#00574A">그래서 무엇을?</text>
+<text x="322" y="148" font-size="12" fill="#134E4A">채널 B 예산을</text>
+<text x="322" y="166" font-size="12" fill="#134E4A">15% 늘려 보세요.</text>
+<text x="322" y="196" font-size="11" fill="#536274">근거: ROAS 4.8배</text>
+<text x="322" y="214" font-size="11" fill="#536274">(전체 평균 4.1배)</text>
+</g>
+</svg>
+</sc-if>
+
+<sc-if value="{{ is7 }}" hint-placeholder-val="{{ false }}">
+<svg viewBox="0 0 480 260" role="img" aria-label="수집부터 알림까지 자동으로 이어지는 파이프라인이 반복 실행되는 애니메이션">
+<g font-size="12">
+<g><rect x="12" y="96" width="76" height="52" rx="10" fill="#fff" stroke="#CBD5E1" class="an" style="animation: lit .5s ease-out .2s both"></rect><text x="50" y="126" text-anchor="middle" fill="#0F172A">트리거</text></g>
+<g><rect x="104" y="96" width="76" height="52" rx="10" fill="#fff" stroke="#CBD5E1" class="an" style="animation: lit .5s ease-out .9s both"></rect><text x="142" y="126" text-anchor="middle" fill="#0F172A">수집</text></g>
+<g><rect x="196" y="96" width="76" height="52" rx="10" fill="#fff" stroke="#CBD5E1" class="an" style="animation: lit .5s ease-out 1.6s both"></rect><text x="234" y="126" text-anchor="middle" fill="#0F172A">정제</text></g>
+<g><rect x="288" y="96" width="76" height="52" rx="10" fill="#fff" stroke="#CBD5E1" class="an" style="animation: lit .5s ease-out 2.3s both"></rect><text x="326" y="126" text-anchor="middle" fill="#0F172A">분석</text></g>
+<g><rect x="380" y="96" width="88" height="52" rx="10" fill="#fff" stroke="#CBD5E1" class="an" style="animation: lit .5s ease-out 3s both"></rect><text x="424" y="126" text-anchor="middle" fill="#0F172A">리포트·알림</text></g>
+</g>
+<g stroke="#94A3B8" stroke-width="2"><line x1="88" y1="122" x2="104" y2="122"></line><line x1="180" y1="122" x2="196" y2="122"></line><line x1="272" y1="122" x2="288" y2="122"></line><line x1="364" y1="122" x2="380" y2="122"></line></g>
+<circle cx="30" cy="122" r="8" fill="#007A64" class="an" style="--dx: 400px; animation: mv 3.4s linear .2s infinite"></circle>
+<g class="an" style="animation: fadeUp .6s ease-out .4s"><rect x="150" y="30" width="180" height="34" rx="17" fill="#E8F1FF" stroke="#2563EB"></rect><text x="240" y="52" text-anchor="middle" font-size="13" fill="#1E3A8A">매일 09:00 자동 실행</text></g>
+<g class="an" style="animation: fadeUp .6s ease-out 3.2s"><rect x="110" y="184" width="260" height="40" rx="10" fill="#E6FAF6" stroke="#9FE8D8"></rect><text x="240" y="209" text-anchor="middle" font-size="13" fill="#00574A">대시보드가 최신 상태로 갱신됩니다</text></g>
+</svg>
+</sc-if>
+
+</div>
+</section>
+
+<section class="card" aria-label="단계 설명">
+<span style="display: inline-block; padding: 2px 10px; border-radius: 12px; background: #E6FAF6; color: #00574A; font-size: var(--fs); font-weight: 500">{{ cur.no }} / 7단계</span>
+<h2 class="h2" style="margin-top: 8px">{{ cur.title }}</h2>
+<div class="lbl mono">{{ cur.en }}</div>
+<div style="margin-top: 12px">
+<div class="lbl" style="font-weight: 700">내용</div>
+<p style="margin: 2px 0 0">{{ cur.desc }}</p>
+</div>
+<div style="margin-top: 12px">
+<div class="lbl" style="font-weight: 700">{{ cur.key }}</div>
+<p style="margin: 2px 0 0">{{ cur.keyText }}</p>
+</div>
+<div style="margin-top: 12px; padding: 12px 14px; border-radius: 10px; background: #F0FDFA; border: 1px solid #9FE8D8">
+<div class="lbl" style="font-weight: 700; color: #00574A">이 서비스에서는</div>
+<p style="margin: 2px 0 8px">{{ cur.feature }}</p>
+<a class="btn" href="{{ cur.href }}">{{ cur.hrefLabel }}</a>
+</div>
+</section>
+</div>
+
+<section aria-label="7단계 한눈에 보기">
+<h2 class="h2" style="margin-bottom: 10px">7단계 한눈에 보기</h2>
+<div class="ov">
+<sc-for list="{{ overview }}" as="o" hint-placeholder-count="7">
+<button type="button" onClick="{{ o.pick }}" style="text-align: left; font: inherit; color: inherit; cursor: pointer; min-height: 44px; padding: 14px; border-radius: 12px; border: 2px solid {{ o.border }}; background: {{ o.bg }}">
+<div class="lbl mono">{{ o.no }}단계</div>
+<div style="font-weight: 700; margin-top: 2px">{{ o.title }}</div>
+<div class="lbl" style="margin-top: 4px">{{ o.short }}</div>
+</button>
+</sc-for>
+<a href="Generated.dc.html" style="display: flex; flex-direction: column; justify-content: center; text-decoration: none; color: #fff; min-height: 44px; padding: 14px; border-radius: 12px; background: #007A64">
+<div style="font-weight: 700">프로젝트 만들기</div>
+<div style="font-size: var(--fs); margin-top: 4px">7단계 결과로 대시보드를 만듭니다</div>
+</a>
+</div>
+</section>
+<p class="lbl" style="margin: 0">※ 모든 이름과 수치는 설명을 위한 샘플입니다. 움직임을 줄이는 설정을 사용 중이면 애니메이션은 멈춘 상태로 표시됩니다.</p>
+</main>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1500}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { active: 0, playing: true };
+this.timer = null;
+}
+componentDidMount() {
+this.timer = setInterval(() => {
+if (this.state.playing) { this.setState({ active: (this.state.active + 1) % 7 }); }
+}, 5200);
+}
+componentWillUnmount() {
+if (this.timer) { clearInterval(this.timer); }
+}
+renderVals() {
+const st = this.state;
+const a = st.active;
+const S = [
+{ no: 1, title: '문제 정의 및 목표 설정', short: '문제 정의', en: 'Problem Definition', desc: '분석을 통해 해결하고자 하는 비즈니스적·기술적 문제를 명확히 정의합니다.', key: '핵심', keyText: "'어떤 지표(KPI)를 개선할 것인가?', '어떤 가설을 검증할 것인가?'를 설정하여 방향성을 잡습니다.", feature: '프로젝트를 만들 때 목표 지표와 검증하고 싶은 가설을 적어 두면 이후 단계의 기준이 됩니다.', href: 'Projects.dc.html', hrefLabel: '프로젝트 보기' },
+{ no: 2, title: '데이터 수집', short: '데이터 수집', en: 'Data Collection', desc: '목표 달성에 필요한 정형 및 비정형 데이터를 다양한 소스에서 확보합니다.', key: '수단', keyText: '데이터베이스(Supabase 등), 외부 API, 로그 파일, 웹 크롤링 등을 활용해 원천 데이터를 수집합니다.', feature: 'CSV·엑셀 파일을 끌어다 놓아 올리는 것으로 시작하고, DB·API 연결은 다음 버전에서 확장합니다.', href: 'Upload.dc.html', hrefLabel: '파일 올리기' },
+{ no: 3, title: '데이터 전처리 및 정제', short: '전처리·정제', en: 'Data Cleansing & Preprocessing', desc: '수집된 데이터의 품질을 높이기 위해 오류를 수정하고 가공하기 좋은 형태로 다듬습니다.', key: '주요 작업', keyText: '결측치(Null) 처리, 중복 데이터 제거, 이상치(Outlier) 정제, 데이터 타입 변환 및 정규화/표준화.', feature: 'AI가 정리 제안을 만들고, 변경 전·후를 미리 본 뒤 적용하거나 건너뛸 수 있습니다.', href: 'Check.dc.html', hrefLabel: '정리 제안 보기' },
+{ no: 4, title: '탐색적 데이터 분석', short: 'EDA', en: 'EDA: Exploratory Data Analysis', desc: '본격적인 모델링이나 분석에 앞서 데이터의 구조, 분포, 변수 간의 상관관계 등을 시각화와 통계 기법으로 파악합니다.', key: '핵심', keyText: '데이터의 숨겨진 패턴이나 트렌드를 직관적으로 발견하고, 가설을 수정·보완하는 단계입니다.', feature: '컬럼 유형에 맞는 그래프를 자동으로 추천하고, 분포와 상관관계를 한눈에 보여줍니다.', href: 'Charts.dc.html', hrefLabel: '그래프 구조 보기' },
+{ no: 5, title: '데이터 모델링 및 심층 분석', short: '모델링·심층 분석', en: 'Modeling & Analysis', desc: '목적에 따라 통계적 기법, 머신러닝 알고리즘 또는 비즈니스 로직을 적용하여 데이터를 분석합니다.', key: '주요 작업', keyText: '회귀 분석, 분류/군집화 모델링, 시계열 예측, 또는 커스텀 데이터 파이프라인 연산.', feature: '1차 버전은 기본 통계와 시계열 추세, 2차 버전에서 예측·군집 분석을 추가합니다.', href: 'Main.dc.html', hrefLabel: '분석 화면 보기' },
+{ no: 6, title: '결과 해석 및 시각화', short: '해석·시각화', en: 'Visualization & Insight Extraction', desc: '분석 결과를 비즈니스 담당자나 시스템이 쉽게 이해할 수 있도록 대시보드나 리포트 형태로 시각화합니다.', key: '핵심', keyText: "단순한 수치 나열이 아닌, '그래서 무엇을 해야 하는가?'에 대한 실행 가능한 인사이트를 도출합니다.", feature: '대시보드와 문장형 리포트를 자동으로 만들고, 말로 수정을 요청할 수 있습니다.', href: 'Generated.dc.html', hrefLabel: '프로젝트 결과 보기' },
+{ no: 7, title: '자동화 및 파이프라인 구축', short: '자동화·파이프라인', en: 'Automation & Deployment', desc: '일회성 분석에 그치지 않고, 데이터 수집부터 정제·분석·리포팅까지의 전 과정을 자동화하여 실시간으로 운영할 수 있도록 시스템화합니다.', key: '수단', keyText: 'n8n 등을 활용해 데이터 파이프라인을 자동 트리거하고, 웹앱이나 대시보드와 연동하여 지속 가능한 모니터링 체계를 구축합니다.', feature: '정해진 시간에 자동으로 다시 분석하고 리포트를 보내는 기능을 확장 단계에서 제공합니다.', href: 'Home.dc.html', hrefLabel: '대시보드로 가기' }
+];
+const go = (i) => () => this.setState({ active: i, playing: false });
+const kidsDef = ['1. 문제 정의·목표 설정', '2. 데이터 수집', '3. 전처리·정제', '4. 탐색적 분석(EDA)', '5. 모델링·심층 분석', '6. 결과 해석·시각화', '7. 자동화·파이프라인'];
+const kids = kidsDef.map((k, i) => ({ label: k, href: '#', cls: i === a ? 'on' : '', pick: go(i) }));
+const mkNav = (label, icon, href, on) => ({ label: label, icon: icon, cls: on ? 'on' : '', href: href, cur: on ? 'page' : 'false', open: false, children: [] });
+const nav = [
+mkNav('대시보드', 'M5 20V10M12 20V4M19 20v-7', 'Home.dc.html', false),
+mkNav('업로드', 'M12 16V4M7 9l5-5 5 5M4 20h16', 'Upload.dc.html', false),
+mkNav('프로젝트', 'M3 7h6l2 2h10v10H3z', 'Projects.dc.html', false),
+mkNav('데이터분석단계', 'M4 6h16M4 12h16M4 18h10', 'Steps.dc.html', true),
+mkNav('리포트', 'M7 3h7l5 5v13H7zM14 3v5h5', 'Charts.dc.html', false)
+];
+nav[3].open = true; nav[3].children = kids;
+return {
+nav: nav,
+cur: S[a],
+is1: a === 0, is2: a === 1, is3: a === 2, is4: a === 3, is5: a === 4, is6: a === 5, is7: a === 6,
+playLabel: st.playing ? '일시정지' : '자동 재생',
+playPressed: st.playing ? 'true' : 'false',
+togglePlay: () => this.setState({ playing: !this.state.playing }),
+prev: () => this.setState({ active: (this.state.active + 6) % 7, playing: false }),
+next: () => this.setState({ active: (this.state.active + 1) % 7, playing: false }),
+restart: () => this.setState({ active: 0, playing: true }),
+stepper: S.map((s, i) => ({
+mark: i < a ? '✓' : String(i + 1),
+dot: i < a ? 'done' : (i === a ? 'act' : ''),
+lab: i === a ? 'act' : '',
+title: s.short,
+aria: s.no + '단계 ' + s.title,
+hasLine: i < 6,
+fill: i < a ? '100%' : '0%',
+pick: go(i)
+})),
+overview: S.map((s, i) => ({ no: s.no, title: s.title, short: s.short, border: i === a ? '#007A64' : '#E2E8F0', bg: i === a ? '#E6FAF6' : '#FFFFFF', pick: go(i) }))
+};
+}
+}
+</script>
+</body>
+</html>

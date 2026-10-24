@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>데이터분석단계 3 전처리·정제 · 데스크탑</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+:root{--bg:#F4F7F8;--ink:#0F172A;--sub:#475569;--mut:#536274;--line:#E2E8F0;--pri:#007A64;--mint:#00C9A7;--denim:#2563EB;--amber:#F59E0B;--coral:#F43F5E;--fb:14px;--ft:20px;--fk:24px;--fs:12px;--gut:16px}
+@media (min-width:768px){:root{--fb:15px;--ft:24px;--fk:28px;--fs:12.5px;--gut:20px}}
+@media (min-width:1200px){:root{--fb:16px;--ft:28px;--fk:32px;--fs:13px;--gut:24px}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Noto Sans KR',system-ui,sans-serif;font-size:var(--fb);line-height:1.5}
+.mono{font-family:'JetBrains Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.lbl{font-size:var(--fs);color:var(--mut)}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px}
+.h1{margin:0;font-size:var(--ft);font-weight:700;line-height:1.25}
+.h3{margin:0;font-size:var(--fb);font-weight:700}
+.btn{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 16px;border-radius:8px;border:1px solid #CBD5E1;background:#fff;color:var(--ink);font:inherit;font-size:var(--fs);font-weight:500;cursor:pointer}
+.btn.pri{background:var(--pri);border-color:var(--pri);color:#fff}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;background:#FEF3C7;color:#78350F;font-size:var(--fs);font-weight:500}
+.nav{display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:8px;color:var(--sub);text-decoration:none;font-size:var(--fb)}
+.nav:hover{background:#F1F5F9}
+.nav.on{background:#E6FAF6;color:#00574A;font-weight:700}
+.top{display:flex;align-items:center;flex-wrap:wrap;gap:12px;padding:10px var(--gut);background:#fff;border-bottom:1px solid var(--line)}
+.row{display:flex;flex-wrap:wrap;align-items:flex-start}
+.side{flex:0 0 232px;padding:16px;background:#fff;border-right:1px solid var(--line);align-self:stretch}
+.main{flex:999 1 560px;min-width:0;padding:var(--gut);display:flex;flex-direction:column;gap:var(--gut)}
+.g2{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:var(--gut)}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--gut)}
+.kpi{font-size:var(--fk);font-weight:700}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-size:var(--fs);color:var(--mut);font-weight:500;padding:8px 8px;border-bottom:1px solid var(--line)}
+td{padding:10px 8px;border-bottom:1px solid var(--line);font-size:var(--fb)}
+@media (max-width:767px){.g2{grid-template-columns:minmax(0,1fr)}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.side{flex:1 1 100%}}
+.sg2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--gut)}
+.sg{display:flex;flex-direction:column;gap:8px}
+.sg p{margin:0}
+.sgh{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px}
+.pill{padding:2px 10px;border-radius:12px;background:#E6FAF6;color:#00574A;font-size:var(--fs);font-weight:500}
+.tw{overflow-x:auto}
+.pvt{min-width:0;font-size:var(--fs)}
+.pvt td,.pvt th{font-size:var(--fs);padding:6px 8px}
+.pvt td.b{background:#FFE4E6;color:#881337}
+.pvt td.a{background:#DCFCE7;color:#14532D}
+.opt2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.optt{font-weight:700;font-size:var(--fs);margin-bottom:4px}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.ch{display:inline-flex;align-items:center;min-height:36px;padding:0 14px;border-radius:18px;border:1px solid #CBD5E1;background:#fff;font-size:var(--fs)}
+.sum{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--gut);margin-top:8px}
+.kv{font-size:var(--fk);font-weight:700}
+a.btn{text-decoration:none}
+@media (max-width:1199px){.sg2{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:767px){.opt2{grid-template-columns:minmax(0,1fr)}.sum{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.subnav{display:flex;flex-direction:column;gap:2px;margin:2px 0 6px 18px;padding-left:10px;border-left:2px solid #E2E8F0}
+.sub-a{display:flex;align-items:center;min-height:44px;padding:0 10px;border-radius:8px;color:var(--sub);text-decoration:none;font-size:var(--fs)}
+.sub-a:hover{background:#F1F5F9}
+.sub-a.on{background:#E6FAF6;color:#00574A;font-weight:700}
+a.btn{text-decoration:none}
+</style>
+</helmet>
+<div style="display: flex; flex-direction: column; background: #F4F7F8; min-height: 1000px">
+<header class="top">
+<div style="display: flex; align-items: center; gap: 10px">
+<span aria-hidden="true" style="width: 32px; height: 32px; border-radius: 8px; background: #007A64; display: inline-flex; align-items: center; justify-content: center">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V10M12 20V4M19 20v-7"></path></svg>
+</span>
+<strong style="font-size: 16px">[서비스명]</strong>
+</div>
+<nav aria-label="현재 위치" class="lbl" style="margin-left: 12px">[프로젝트명] / 데이터분석단계 / <strong style="color: #0F172A">3. 전처리·정제</strong></nav>
+<div style="flex-grow: 1"></div>
+<span class="badge">샘플 데이터</span>
+</header>
+<div class="row" style="flex-grow: 1">
+<aside class="side" aria-label="메뉴">
+<nav style="display: flex; flex-direction: column; gap: 4px" aria-label="주요 메뉴">
+<sc-for list="{{ nav }}" as="n" hint-placeholder-count="5">
+<a class="nav {{ n.cls }}" href="{{ n.href }}" aria-current="{{ n.cur }}">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ n.icon }}"></path></svg>
+<span>{{ n.label }}</span>
+</a>
+<sc-if value="{{ n.open }}" hint-placeholder-val="{{ false }}">
+<div class="subnav">
+<sc-for list="{{ n.children }}" as="c" hint-placeholder-count="7">
+<a class="sub-a {{ c.cls }}" href="{{ c.href }}" onClick="{{ c.pick }}">{{ c.label }}</a>
+</sc-for>
+</div>
+</sc-if>
+</sc-for>
+</nav>
+</aside>
+<main class="main">
+<div style="display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 12px">
+<div style="flex: 1 1 320px">
+<h1 class="h1">3단계 · 데이터 전처리 및 정제</h1>
+<p class="lbl" style="margin: 4px 0 0">AI가 데이터를 읽고 정리가 필요한 부분을 찾았습니다. 제안을 확인하고 적용하세요.</p>
+</div>
+<a class="btn pri" href="Generated.dc.html">프로젝트 만들기</a>
+</div>
+<section class="kpis" aria-label="데이터 요약">
+<sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4">
+<div class="card">
+<div class="lbl">{{ k.label }}</div>
+<div class="kpi mono" style="margin-top: 4px">{{ k.value }}</div>
+</div>
+</sc-for>
+</section>
+<section class="card" aria-label="컬럼 요약" style="overflow-x: auto">
+<h2 class="h3" style="margin-bottom: 8px">컬럼 요약</h2>
+<table style="min-width: 560px">
+<thead><tr><th>컬럼</th><th>유형</th><th>결측</th><th>고유값</th><th>상태</th></tr></thead>
+<tbody>
+<sc-for list="{{ cols }}" as="c" hint-placeholder-count="6">
+<tr>
+<td><span class="mono">{{ c.name }}</span></td>
+<td>{{ c.type }}</td>
+<td class="mono">{{ c.miss }}</td>
+<td class="mono">{{ c.uniq }}</td>
+<td><span style="padding: 2px 10px; border-radius: 12px; font-size: var(--fs); font-weight: 500; background: {{ c.bg }}; color: {{ c.fg }}">{{ c.status }}</span></td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</section>
+<section aria-label="AI 정리 제안">
+<div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 8px; margin-bottom: 12px">
+<div style="flex: 1 1 320px">
+<h2 class="h3" style="margin-bottom: 2px; font-size: calc(var(--fb) + 2px)">AI 정리 제안 · 변경 미리보기</h2>
+<p class="lbl" style="margin: 0">각 제안의 변경 전·후를 볼 수 있고, 항목별로 접거나 펼칠 수 있습니다. 원본 파일은 바뀌지 않고 언제든 되돌릴 수 있습니다.</p>
+</div>
+<button class="btn" type="button" onClick="{{ toggleAll }}">{{ allLabel }}</button>
+</div>
+<div class="sg2">
+
+<div class="card sg">
+<div class="sgh"><h3 class="h3">1. 날짜 형식 통일</h3><div style="display: flex; align-items: center; gap: 8px"><span class="pill">영향 1,842행</span><button class="btn" type="button" aria-expanded="{{ s1.exp }}" onClick="{{ s1.toggle }}">{{ s1.label }}</button></div></div>
+<p class="lbl">두 가지 날짜 표기(2026-01-05, 26/1/5)를 하나로 맞춥니다.</p>
+<sc-if value="{{ s1.open }}" hint-placeholder-val="{{ true }}">
+<div class="tw"><table class="pvt">
+<thead><tr><th>order_id</th><th>변경 전</th><th aria-hidden="true"></th><th>변경 후</th></tr></thead>
+<tbody>
+<tr><td class="mono">A-1001</td><td class="mono b">26/1/5</td><td>→</td><td class="mono a">2026-01-05</td></tr>
+<tr><td class="mono">A-1002</td><td class="mono">2026-01-12</td><td>→</td><td class="mono">2026-01-12 (변경 없음)</td></tr>
+<tr><td class="mono">A-1003</td><td class="mono b">26/2/3</td><td>→</td><td class="mono a">2026-02-03</td></tr>
+<tr><td class="mono">A-1004</td><td class="mono b">26/3/17</td><td>→</td><td class="mono a">2026-03-17</td></tr>
+</tbody></table></div>
+<p class="lbl">컬럼 유형: 텍스트 → 날짜. 이후 월별·주별 집계가 가능해집니다.</p>
+<div class="acts"><button class="btn pri" type="button">적용</button><button class="btn" type="button">건너뛰기</button></div>
+</sc-if>
+</div>
+
+<div class="card sg">
+<div class="sgh"><h3 class="h3">2. 상품명 표기 정리</h3><div style="display: flex; align-items: center; gap: 8px"><span class="pill">영향 9쌍 · 214행</span><button class="btn" type="button" aria-expanded="{{ s2.exp }}" onClick="{{ s2.toggle }}">{{ s2.label }}</button></div></div>
+<p class="lbl">대소문자·공백이 달라 중복된 상품명을 하나로 합칩니다.</p>
+<sc-if value="{{ s2.open }}" hint-placeholder-val="{{ true }}">
+<div class="tw"><table class="pvt">
+<thead><tr><th>변경 전</th><th aria-hidden="true"></th><th>변경 후</th><th>행 수</th></tr></thead>
+<tbody>
+<tr><td class="b">apple case</td><td>→</td><td class="a" rowspan="3">Apple Case</td><td class="mono">48</td></tr>
+<tr><td class="b">APPLE CASE</td><td>→</td><td class="mono">31</td></tr>
+<tr><td class="b">Apple Case&nbsp;(끝 공백)</td><td>→</td><td class="mono">12</td></tr>
+<tr><td class="b">usb-c cable</td><td>→</td><td class="a">USB-C Cable</td><td class="mono">27</td></tr>
+<tr><td class="b">Usb-C Cable</td><td>→</td><td class="a">USB-C Cable</td><td class="mono">19</td></tr>
+</tbody></table></div>
+<p class="lbl">고유 상품 수 48개 → 39개. 합치기 전 후보를 한 번 더 확인할 수 있습니다.</p>
+<div class="acts"><button class="btn pri" type="button">적용</button><button class="btn" type="button">건너뛰기</button></div>
+</sc-if>
+</div>
+
+<div class="card sg">
+<div class="sgh"><h3 class="h3">3. 광고비 결측 처리</h3><div style="display: flex; align-items: center; gap: 8px"><span class="pill">영향 240건</span><button class="btn" type="button" aria-expanded="{{ s3.exp }}" onClick="{{ s3.toggle }}">{{ s3.label }}</button></div></div>
+<p class="lbl">비어 있는 광고비를 어떻게 다룰지 두 가지 방법을 비교해 보세요.</p>
+<sc-if value="{{ s3.open }}" hint-placeholder-val="{{ true }}">
+<div class="opt2">
+<div>
+<div class="optt">방법 A · 0으로 채우기 (권장)</div>
+<div class="tw"><table class="pvt">
+<thead><tr><th>날짜</th><th>전</th><th>후</th></tr></thead>
+<tbody>
+<tr><td class="mono">01-05</td><td class="b">(빈칸)</td><td class="mono a">0</td></tr>
+<tr><td class="mono">01-06</td><td class="mono">12,000</td><td class="mono">12,000</td></tr>
+<tr><td class="mono">01-07</td><td class="b">(빈칸)</td><td class="mono a">0</td></tr>
+</tbody></table></div>
+<p class="lbl">행 수 유지, 광고 안 한 날로 계산</p>
+</div>
+<div>
+<div class="optt">방법 B · 해당 행 제외</div>
+<div class="tw"><table class="pvt">
+<thead><tr><th>날짜</th><th>전</th><th>후</th></tr></thead>
+<tbody>
+<tr><td class="mono">01-05</td><td class="b">(빈칸)</td><td class="b">제외</td></tr>
+<tr><td class="mono">01-06</td><td class="mono">12,000</td><td class="mono">12,000</td></tr>
+<tr><td class="mono">01-07</td><td class="b">(빈칸)</td><td class="b">제외</td></tr>
+</tbody></table></div>
+<p class="lbl">행 12,480 → 12,240, 매출도 함께 빠짐</p>
+</div>
+</div>
+<div class="acts"><button class="btn pri" type="button">A 적용</button><button class="btn" type="button">B 적용</button><button class="btn" type="button">건너뛰기</button></div>
+</sc-if>
+</div>
+
+<div class="card sg">
+<div class="sgh"><h3 class="h3">4. 금액 이상치 확인</h3><div style="display: flex; align-items: center; gap: 8px"><span class="pill">검토 27건</span><button class="btn" type="button" aria-expanded="{{ s4.exp }}" onClick="{{ s4.toggle }}">{{ s4.label }}</button></div></div>
+<p class="lbl">자동으로 고치지 않고, 건별로 유지·제외·수정을 고르게 합니다.</p>
+<sc-if value="{{ s4.open }}" hint-placeholder-val="{{ true }}">
+<div class="tw"><table class="pvt">
+<thead><tr><th>주문</th><th>amount</th><th>평균 대비</th><th>AI 의견</th></tr></thead>
+<tbody>
+<tr><td class="mono">A-2031</td><td class="mono b">12,000,000원</td><td class="mono">약 28배</td><td>단위 오입력 가능성</td></tr>
+<tr><td class="mono">A-2377</td><td class="mono b">-5,000원</td><td class="mono">음수</td><td>환불·취소 행으로 추정</td></tr>
+<tr><td class="mono">A-3410</td><td class="mono b">0원</td><td class="mono">0배</td><td>무료 증정으로 추정</td></tr>
+</tbody></table></div>
+<div class="chips"><span class="ch">유지</span><span class="ch">제외</span><span class="ch">직접 수정</span></div>
+<p class="lbl">나머지 24건은 "전체 보기"에서 확인합니다.</p>
+<div class="acts"><button class="btn pri" type="button">27건 검토 시작</button><button class="btn" type="button">건너뛰기</button></div>
+</sc-if>
+</div>
+
+</div>
+</section>
+<section class="card" aria-label="적용 후 요약" style="background: #F0FDFA; border-color: #9FE8D8">
+<h2 class="h3">모두 적용하면 이렇게 바뀝니다 (방법 A 기준)</h2>
+<div class="sum">
+<div><div class="lbl">결측 셀</div><div class="mono kv">312 → 72</div></div>
+<div><div class="lbl">고유 상품 수</div><div class="mono kv">48 → 39</div></div>
+<div><div class="lbl">날짜 컬럼</div><div class="kv" style="font-size: calc(var(--fb) + 2px)">텍스트 → 날짜</div></div>
+<div><div class="lbl">검토 필요</div><div class="mono kv">27건</div></div>
+</div>
+</section>
+<div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px">
+<a class="btn" href="Steps.dc.html">이전: 데이터분석단계</a>
+<a class="btn pri" href="Generated.dc.html">프로젝트 만들기</a>
+</div>
+<p class="lbl" style="margin: 0">※ 화면의 모든 수치와 컬럼은 예시용 샘플이며 실제 데이터가 아닙니다.</p>
+</main>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1900}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { open: [true, true, true, true] };
+}
+renderVals() {
+const st = this.state;
+const anyOpen = st.open.some((v) => v);
+const sg = (i) => ({
+open: st.open[i],
+exp: st.open[i] ? 'true' : 'false',
+label: st.open[i] ? '접기' : '펼치기',
+toggle: () => { const next = this.state.open.slice(); next[i] = !next[i]; this.setState({ open: next }); }
+});
+const ok = { bg: '#DCFCE7', fg: '#14532D' };
+const warn = { bg: '#FEF3C7', fg: '#78350F' };
+const bad = { bg: '#FFE4E6', fg: '#881337' };
+return {
+s1: sg(0), s2: sg(1), s3: sg(2), s4: sg(3),
+allLabel: anyOpen ? '모두 접기' : '모두 펼치기',
+toggleAll: () => this.setState({ open: [!anyOpen, !anyOpen, !anyOpen, !anyOpen] }),
+nav: [
+{ label: '대시보드', icon: 'M5 20V10M12 20V4M19 20v-7', cls: '', href: 'Home.dc.html', cur: 'false', open: false, children: [{ label: '1. 문제 정의·목표 설정', href: 'Steps.dc.html', cls: '', pick: null }, { label: '2. 데이터 수집', href: 'Steps.dc.html', cls: '', pick: null }, { label: '3. 전처리·정제', href: 'Check.dc.html', cls: '', pick: null }, { label: '4. 탐색적 분석(EDA)', href: 'Steps.dc.html', cls: '', pick: null }, { label: '5. 모델링·심층 분석', href: 'Steps.dc.html', cls: '', pick: null }, { label: '6. 결과 해석·시각화', href: 'Steps.dc.html', cls: '', pick: null }, { label: '7. 자동화·파이프라인', href: 'Steps.dc.html', cls: '', pick: null }] },
+{ label: '업로드', icon: 'M12 16V4M7 9l5-5 5 5M4 20h16', cls: '', href: 'Upload.dc.html', cur: 'false', open: false, children: [{ label: '1. 문제 정의·목표 설정', href: 'Steps.dc.html', cls: '', pick: null }, { label: '2. 데이터 수집', href: 'Steps.dc.html', cls: '', pick: null }, { label: '3. 전처리·정제', href: 'Check.dc.html', cls: '', pick: null }, { label: '4. 탐색적 분석(EDA)', href: 'Steps.dc.html', cls: '', pick: null }, { label: '5. 모델링·심층 분석', href: 'Steps.dc.html', cls: '', pick: null }, { label: '6. 결과 해석·시각화', href: 'Steps.dc.html', cls: '', pick: null }, { label: '7. 자동화·파이프라인', href: 'Steps.dc.html', cls: '', pick: null }] },
+{ label: '프로젝트', icon: 'M3 7h6l2 2h10v10H3z', cls: '', href: 'Projects.dc.html', cur: 'false', open: false, children: [{ label: '1. 문제 정의·목표 설정', href: 'Steps.dc.html', cls: '', pick: null }, { label: '2. 데이터 수집', href: 'Steps.dc.html', cls: '', pick: null }, { label: '3. 전처리·정제', href: 'Check.dc.html', cls: '', pick: null }, { label: '4. 탐색적 분석(EDA)', href: 'Steps.dc.html', cls: '', pick: null }, { label: '5. 모델링·심층 분석', href: 'Steps.dc.html', cls: '', pick: null }, { label: '6. 결과 해석·시각화', href: 'Steps.dc.html', cls: '', pick: null }, { label: '7. 자동화·파이프라인', href: 'Steps.dc.html', cls: '', pick: null }] },
+{ label: '데이터분석단계', icon: 'M4 6h16M4 12h16M4 18h10', cls: 'on', href: 'Steps.dc.html', cur: 'page', open: true, children: [{ label: '1. 문제 정의·목표 설정', href: 'Steps.dc.html', cls: '', pick: null }, { label: '2. 데이터 수집', href: 'Steps.dc.html', cls: '', pick: null }, { label: '3. 전처리·정제', href: 'Check.dc.html', cls: 'on', pick: null }, { label: '4. 탐색적 분석(EDA)', href: 'Steps.dc.html', cls: '', pick: null }, { label: '5. 모델링·심층 분석', href: 'Steps.dc.html', cls: '', pick: null }, { label: '6. 결과 해석·시각화', href: 'Steps.dc.html', cls: '', pick: null }, { label: '7. 자동화·파이프라인', href: 'Steps.dc.html', cls: '', pick: null }] },
+{ label: '리포트', icon: 'M7 3h7l5 5v13H7zM14 3v5h5', cls: '', href: 'Charts.dc.html', cur: 'false', open: false, children: [{ label: '1. 문제 정의·목표 설정', href: 'Steps.dc.html', cls: '', pick: null }, { label: '2. 데이터 수집', href: 'Steps.dc.html', cls: '', pick: null }, { label: '3. 전처리·정제', href: 'Check.dc.html', cls: '', pick: null }, { label: '4. 탐색적 분석(EDA)', href: 'Steps.dc.html', cls: '', pick: null }, { label: '5. 모델링·심층 분석', href: 'Steps.dc.html', cls: '', pick: null }, { label: '6. 결과 해석·시각화', href: 'Steps.dc.html', cls: '', pick: null }, { label: '7. 자동화·파이프라인', href: 'Steps.dc.html', cls: '', pick: null }] }
+],
+kpis: [
+{ label: '행 수', value: '12,480' },
+{ label: '컬럼 수', value: '14' },
+{ label: '결측 셀', value: '312' },
+{ label: '이상치 후보', value: '27' }
+],
+cols: [
+{ name: 'order_date', type: '날짜', miss: '0', uniq: '365', status: '정상', ...ok },
+{ name: 'channel', type: '범주', miss: '12', uniq: '5', status: '결측', ...warn },
+{ name: 'product', type: '범주', miss: '0', uniq: '48', status: '표기 불일치', ...warn },
+{ name: 'amount', type: '숫자', miss: '0', uniq: '2,114', status: '이상치', ...bad },
+{ name: 'ad_cost', type: '숫자', miss: '240', uniq: '980', status: '결측', ...warn },
+{ name: 'refund_yn', type: '범주', miss: '0', uniq: '2', status: '정상', ...ok }
+],
+sugg: [
+{ title: '날짜 형식 통일', desc: '두 가지 날짜 표기(2026-01-05, 26/1/5)를 하나로 맞춥니다.' },
+{ title: '상품명 표기 정리', desc: '대소문자·공백이 달라 중복된 상품명 9쌍을 합칩니다.' },
+{ title: '광고비 결측 처리', desc: '결측 240건을 0으로 채우거나 제외할 수 있습니다.' },
+{ title: '금액 이상치 확인', desc: '평균에서 크게 벗어난 값 27건을 검토합니다.' }
+]
+};
+}
+}
+</script>
+</body>
+</html>

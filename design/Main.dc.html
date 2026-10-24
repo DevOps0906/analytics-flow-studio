@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>대시보드 · 데스크탑</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap">
+<style>
+:root{--bg:#F4F7F8;--ink:#0F172A;--sub:#475569;--mut:#536274;--line:#E2E8F0;--pri:#007A64;--mint:#00C9A7;--denim:#2563EB;--amber:#F59E0B;--coral:#F43F5E;--fb:14px;--ft:20px;--fk:24px;--fs:12px;--gut:16px}
+@media (min-width:768px){:root{--fb:15px;--ft:24px;--fk:28px;--fs:12.5px;--gut:20px}}
+@media (min-width:1200px){:root{--fb:16px;--ft:28px;--fk:32px;--fs:13px;--gut:24px}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Noto Sans KR',system-ui,sans-serif;font-size:var(--fb);line-height:1.5}
+.mono{font-family:'JetBrains Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.lbl{font-size:var(--fs);color:var(--mut)}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px}
+.h1{margin:0;font-size:var(--ft);font-weight:700;line-height:1.25}
+.h3{margin:0;font-size:var(--fb);font-weight:700}
+.kpi{font-size:var(--fk);font-weight:700;line-height:1.2;margin:4px 0}
+.btn{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 16px;border-radius:8px;border:1px solid #CBD5E1;background:#fff;color:var(--ink);font:inherit;font-size:var(--fs);font-weight:500;cursor:pointer}
+.btn.pri{background:var(--pri);border-color:var(--pri);color:#fff}
+.chip{display:inline-flex;align-items:center;min-height:44px;padding:0 14px;border-radius:22px;border:1px solid #CBD5E1;background:#fff;font:inherit;font-size:var(--fs);color:var(--ink);cursor:pointer}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;background:#FEF3C7;color:#78350F;font-size:var(--fs);font-weight:500}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.nav{display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:8px;color:var(--sub);text-decoration:none;font-size:var(--fb)}
+.nav:hover{background:#F1F5F9}
+.nav.on{background:#E6FAF6;color:#00574A;font-weight:700}
+.top{display:flex;align-items:center;flex-wrap:wrap;gap:12px;padding:10px var(--gut);background:#fff;border-bottom:1px solid var(--line)}
+.row{display:flex;flex-wrap:wrap;align-items:flex-start}
+.side{flex:0 0 232px;padding:16px;background:#fff;border-right:1px solid var(--line);align-self:stretch}
+.main{flex:999 1 560px;min-width:0;padding:var(--gut);display:flex;flex-direction:column;gap:var(--gut)}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--gut)}
+.g2{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:var(--gut)}
+.g11{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--gut)}
+@media (max-width:1199px){.g2{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:767px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.g11{grid-template-columns:minmax(0,1fr)}.side{flex:1 1 100%}}
+.subnav{display:flex;flex-direction:column;gap:2px;margin:2px 0 6px 18px;padding-left:10px;border-left:2px solid #E2E8F0}
+.sub-a{display:flex;align-items:center;min-height:44px;padding:0 10px;border-radius:8px;color:var(--sub);text-decoration:none;font-size:var(--fs)}
+.sub-a:hover{background:#F1F5F9}
+.sub-a.on{background:#E6FAF6;color:#00574A;font-weight:700}
+a.btn{text-decoration:none}
+</style>
+</helmet>
+<div style="display: flex; flex-direction: column; background: #F4F7F8; min-height: 1180px">
+<header class="top">
+<div style="display: flex; align-items: center; gap: 10px">
+<span aria-hidden="true" style="width: 32px; height: 32px; border-radius: 8px; background: #007A64; display: inline-flex; align-items: center; justify-content: center">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V10M12 20V4M19 20v-7"></path></svg>
+</span>
+<strong style="font-size: 16px">[서비스명]</strong>
+</div><nav aria-label="현재 위치" class="lbl" style="margin-left: 12px">데이터 분석 2026 / <strong style="color: rgb(15, 23, 42)">대시보드</strong></nav>
+
+<div style="flex-grow: 1"></div>
+<span class="badge">샘플 데이터</span>
+<button class="btn" type="button">공유</button>
+<button class="btn pri" type="button">내보내기</button>
+</header>
+<div class="row" style="flex-grow: 1">
+<aside class="side" aria-label="메뉴">
+<nav style="display: flex; flex-direction: column; gap: 4px" aria-label="주요 메뉴">
+<sc-for list="{{ nav }}" as="n" hint-placeholder-count="5">
+<a class="nav {{ n.cls }}" href="{{ n.href }}" aria-current="{{ n.cur }}">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ n.icon }}"></path></svg>
+<span>{{ n.label }}</span>
+</a>
+<sc-if value="{{ n.open }}" hint-placeholder-val="{{ false }}">
+<div class="subnav">
+<sc-for list="{{ n.children }}" as="c" hint-placeholder-count="7">
+<a class="sub-a {{ c.cls }}" href="{{ c.href }}" onClick="{{ c.pick }}">{{ c.label }}</a>
+</sc-for>
+</div>
+</sc-if>
+</sc-for>
+</nav>
+<div class="lbl" style="margin-top: 24px; padding: 12px; border-top: 1px solid #E2E8F0">업로드한 파일 3개<br>sales_sample.csv 외 2개</div>
+</aside>
+<main class="main">
+<div style="display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px">
+<div style="flex: 1 1 320px">
+<h1 class="h1">데이터 분석 대시보드</h1>
+<p class="lbl" style="margin: 4px 0 0">원본: sales_sample.csv · 2026년 1월~9월 · 샘플 데이터</p>
+</div>
+<button class="chip" type="button">기간: 2026.01–2026.09</button>
+<button class="chip" type="button">채널: 전체</button>
+</div>
+<section class="card" aria-label="AI 요약" style="background: #E6FAF6; border-color: #9FE8D8">
+<div style="display: flex; gap: 12px; align-items: flex-start">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#00574A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px"><path d="M12 4l1.8 4.6L18 10l-4.2 1.4L12 16l-1.8-4.6L6 10l4.2-1.4z"></path></svg>
+<div>
+<h2 class="h3" style="color: #00574A">AI 요약</h2>
+<p style="margin: 4px 0 0; color: #134E4A">[여기에 AI가 작성한 해석 문장이 들어갑니다. 예: 매출 추이, 채널별 효율 차이, 확인이 필요한 항목]</p>
+</div>
+</div>
+</section>
+<div class="kpis">
+<sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4">
+<div class="card">
+<div class="lbl">{{ k.label }}</div>
+<div class="kpi mono">{{ k.value }}</div>
+<div style="font-size: var(--fs); font-weight: 500; color: {{ k.color }}">{{ k.delta }}</div>
+</div>
+</sc-for>
+</div>
+<div class="g2">
+<section class="card" aria-label="월별 매출 추이">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px">
+<h2 class="h3">월별 매출·광고비 추이</h2>
+<div class="lbl" style="display: flex; gap: 16px"><span>━ 매출</span><span>┅ 광고비</span></div>
+</div>
+<svg viewBox="0 0 660 200" role="img" aria-label="1월부터 9월까지 매출은 완만하게 증가하고 광고비는 낮은 수준을 유지하는 선 차트" style="width: 100%; height: auto; margin-top: 12px">
+<line x1="20" y1="40" x2="640" y2="40" stroke="#E2E8F0"></line>
+<line x1="20" y1="90" x2="640" y2="90" stroke="#E2E8F0"></line>
+<line x1="20" y1="140" x2="640" y2="140" stroke="#E2E8F0"></line>
+<line x1="20" y1="180" x2="640" y2="180" stroke="#CBD5E1"></line>
+<polygon points="20,130 97.5,120 175,125 252.5,95 330,100 407.5,80 485,70 562.5,75 640,50 640,180 20,180" fill="#00C9A7" fill-opacity="0.14"></polygon>
+<polyline points="20,130 97.5,120 175,125 252.5,95 330,100 407.5,80 485,70 562.5,75 640,50" fill="none" stroke="#00A98C" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"></polyline>
+<polyline points="20,160 97.5,158 175,157 252.5,150 330,152 407.5,146 485,144 562.5,146 640,140" fill="none" stroke="#2563EB" stroke-width="2.5" stroke-dasharray="6 5" stroke-linecap="round"></polyline>
+</svg>
+<div class="lbl" style="display: flex; justify-content: space-between; padding: 0 2px">
+<span>1월</span><span>2월</span><span>3월</span><span>4월</span><span>5월</span><span>6월</span><span>7월</span><span>8월</span><span>9월</span>
+</div>
+</section>
+<section class="card" aria-label="채널별 매출 비중">
+<h2 class="h3">채널별 매출 비중</h2>
+<div style="width: 148px; height: 148px; border-radius: 50%; background: conic-gradient(#00C9A7 0 42%, #2563EB 42% 70%, #F59E0B 70% 88%, #F43F5E 88% 100%); display: flex; align-items: center; justify-content: center; margin: 16px auto">
+<div style="width: 92px; height: 92px; border-radius: 50%; background: #FFFFFF; display: flex; align-items: center; justify-content: center"><span class="lbl">매출 비중</span></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<sc-for list="{{ channels }}" as="c" hint-placeholder-count="4">
+<div style="display: flex; align-items: center; gap: 8px; font-size: var(--fs)">
+<span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 2px; background: {{ c.dot }}"></span>
+<span style="flex-grow: 1">{{ c.name }}</span>
+<span class="mono">{{ c.pct }}</span>
+</div>
+</sc-for>
+</div>
+</section>
+</div>
+<div class="g11">
+<section class="card" aria-label="채널별 ROAS">
+<h2 class="h3">채널별 광고 효율 (ROAS)</h2>
+<div style="display: flex; flex-direction: column; gap: 14px; margin-top: 16px">
+<sc-for list="{{ bars }}" as="b" hint-placeholder-count="4">
+<div style="display: grid; grid-template-columns: 96px minmax(0, 1fr) 56px; align-items: center; gap: 10px">
+<span class="lbl">{{ b.name }}</span>
+<div style="height: 12px; border-radius: 6px; background: #EEF2F5"><div style="height: 12px; border-radius: 6px; background: #00C9A7; width: {{ b.w }}"></div></div>
+<span class="mono" style="font-size: var(--fs)">{{ b.val }}</span>
+</div>
+</sc-for>
+</div>
+</section>
+<section class="card" aria-label="상위 상품">
+<h2 class="h3">상위 상품</h2>
+<div style="display: grid; grid-template-columns: minmax(0, 1fr) 64px 128px; gap: 8px 12px; margin-top: 12px; align-items: center">
+<span class="lbl">상품</span><span class="lbl" style="text-align: right">수량</span><span class="lbl" style="text-align: right">매출</span>
+<sc-for list="{{ rows }}" as="r" hint-placeholder-count="5">
+<span style="padding-top: 8px; border-top: 1px solid #E2E8F0">{{ r.name }}</span>
+<span class="mono" style="padding-top: 8px; border-top: 1px solid #E2E8F0; text-align: right">{{ r.qty }}</span>
+<span class="mono" style="padding-top: 8px; border-top: 1px solid #E2E8F0; text-align: right">{{ r.amount }}</span>
+</sc-for>
+</div>
+</section>
+</div>
+<section class="card" aria-label="AI에게 말로 수정하기">
+<div style="display: flex; align-items: center; gap: 8px">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#007A64" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4l1.8 4.6L18 10l-4.2 1.4L12 16l-1.8-4.6L6 10l4.2-1.4z"></path></svg>
+<h2 class="h3">AI에게 말로 수정하기</h2>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; margin-top: 12px">
+<div style="align-self: flex-end; max-width: 70%; padding: 10px 14px; border-radius: 12px; background: #E8F1FF; color: #1E3A8A">월별 추이를 주간 단위로 바꿔줘</div>
+<div style="align-self: flex-start; max-width: 70%; padding: 10px 14px; border-radius: 12px; background: #E6FAF6; color: #00574A">주간 단위 안을 만들었습니다. 적용할까요?</div>
+<div style="display: flex; gap: 8px"><button class="btn pri" type="button">적용</button><button class="btn" type="button">되돌리기</button></div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px">
+<sc-for list="{{ chips }}" as="t" hint-placeholder-count="3">
+<button class="chip" type="button">{{ t.label }}</button>
+</sc-for>
+</div>
+<div style="display: flex; gap: 8px; margin-top: 12px">
+<label class="sr" for="ask">수정 요청 입력</label>
+<input id="ask" type="text" placeholder="예: 매출 추이를 막대 차트로 바꿔줘" style="flex: 1 1 auto; min-width: 0; min-height: 44px; padding: 0 14px; border: 1px solid #CBD5E1; border-radius: 8px; font: inherit; font-size: var(--fs); color: #0F172A; background: #FFFFFF">
+<button class="btn pri" type="button" aria-label="보내기">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12l16-8-6 16-3-6z"></path></svg>
+</button>
+</div>
+</section>
+<p class="lbl" style="margin: 0">모든 수치는 샘플이며 실제 데이터가 아닙니다. 원본: sales_sample.csv (업로드 파일)</p>
+</main>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1180}}'>
+class Component extends DCLogic {
+renderVals() {
+return {
+nav: [
+{ label: '대시보드', icon: 'M5 20V10M12 20V4M19 20v-7', cls: '', href: 'Home.dc.html', cur: 'false', open: false, children: [{ label: '1. 문제 정의·목표 설정', href: 'Steps.dc.html', cls: '', pick: null }, { label: '2. 데이터 수집', href: 'Steps.dc.html', cls: '', pick: null }, { label: '3. 전처리·정제', href: 'Check.dc.html', cls: '', pick: null }, { label: '4. 탐색적 분석(EDA)', href: 'Steps.dc.html', cls: '', pick: null }, { label: '5. 모델링·심층 분석', href: 'Steps.dc.html', cls: '', pick: null }, { label: '6. 결과 해석·시각화', href: 'Steps.dc.html', cls: '', pick: null }, { label: '7. 자동화·파이프라인', href: 'Steps.dc.html', cls: '', pick: null }] },
+{ label: '업로드', icon: 'M12 16V4M7 9l5-5 5 5M4 20h16', cls: '', href: 'Upload.dc.html', cur: 'false', open: false, children: [{ label: '1. 문제 정의·목표 설정', href: 'Steps.dc.html', cls: '', pick: null }, { label: '2. 데이터 수집', href: 'Steps.dc.html', cls: '', pick: null }, { label: '3. 전처리·정제', href: 'Check.dc.html', cls: '', pick: null }, { label: '4. 탐색적 분석(EDA)', href: 'Steps.dc.html', cls: '', pick: null }, { label: '5. 모델링·심층 분석', href: 'Steps.dc.html', cls: '', pick: null }, { label: '6. 결과 해석·시각화', href: 'Steps.dc.html', cls: '', pick: null }, { label: '7. 자동화·파이프라인', href: 'Steps.dc.html', cls: '', pick: null }] },
+{ label: '프로젝트', icon: 'M3 7h6l2 2h10v10H3z', cls: 'on', href: 'Projects.dc.html', cur: 'page', open: false, children: [{ label: '1. 문제 정의·목표 설정', href: 'Steps.dc.html', cls: '', pick: null }, { label: '2. 데이터 수집', href: 'Steps.dc.html', cls: '', pick: null }, { label: '3. 전처리·정제', href: 'Check.dc.html', cls: '', pick: null }, { label: '4. 탐색적 분석(EDA)', href: 'Steps.dc.html', cls: '', pick: null }, { label: '5. 모델링·심층 분석', href: 'Steps.dc.html', cls: '', pick: null }, { label: '6. 결과 해석·시각화', href: 'Steps.dc.html', cls: '', pick: null }, { label: '7. 자동화·파이프라인', href: 'Steps.dc.html', cls: '', pick: null }] },
+{ label: '데이터분석단계', icon: 'M4 6h16M4 12h16M4 18h10', cls: '', href: 'Steps.dc.html', cur: 'false', open: false, children: [{ label: '1. 문제 정의·목표 설정', href: 'Steps.dc.html', cls: '', pick: null }, { label: '2. 데이터 수집', href: 'Steps.dc.html', cls: '', pick: null }, { label: '3. 전처리·정제', href: 'Check.dc.html', cls: '', pick: null }, { label: '4. 탐색적 분석(EDA)', href: 'Steps.dc.html', cls: '', pick: null }, { label: '5. 모델링·심층 분석', href: 'Steps.dc.html', cls: '', pick: null }, { label: '6. 결과 해석·시각화', href: 'Steps.dc.html', cls: '', pick: null }, { label: '7. 자동화·파이프라인', href: 'Steps.dc.html', cls: '', pick: null }] },
+{ label: '리포트', icon: 'M7 3h7l5 5v13H7zM14 3v5h5', cls: '', href: 'Charts.dc.html', cur: 'false', open: false, children: [{ label: '1. 문제 정의·목표 설정', href: 'Steps.dc.html', cls: '', pick: null }, { label: '2. 데이터 수집', href: 'Steps.dc.html', cls: '', pick: null }, { label: '3. 전처리·정제', href: 'Check.dc.html', cls: '', pick: null }, { label: '4. 탐색적 분석(EDA)', href: 'Steps.dc.html', cls: '', pick: null }, { label: '5. 모델링·심층 분석', href: 'Steps.dc.html', cls: '', pick: null }, { label: '6. 결과 해석·시각화', href: 'Steps.dc.html', cls: '', pick: null }, { label: '7. 자동화·파이프라인', href: 'Steps.dc.html', cls: '', pick: null }] }
+],
+kpis: [
+{ label: '총 매출', value: '3,280,000원', delta: '▲ 12.4% 지난달 대비', color: '#047857' },
+{ label: '광고비', value: '687,000원', delta: '▲ 6.1% 지난달 대비', color: '#BE123C' },
+{ label: 'ROAS', value: '4.9배', delta: '▲ 0.3 지난달 대비', color: '#047857' },
+{ label: '주문 수', value: '1,284건', delta: '▼ 2.8% 지난달 대비', color: '#BE123C' }
+],
+channels: [
+{ name: '스마트스토어', pct: '42%', dot: '#00C9A7' },
+{ name: '자사몰', pct: '28%', dot: '#2563EB' },
+{ name: '마켓 A', pct: '18%', dot: '#F59E0B' },
+{ name: '기타', pct: '12%', dot: '#F43F5E' }
+],
+bars: [
+{ name: '스마트스토어', val: '5.6배', w: '93%' },
+{ name: '자사몰', val: '4.8배', w: '80%' },
+{ name: '마켓 A', val: '4.1배', w: '68%' },
+{ name: '기타', val: '3.2배', w: '53%' }
+],
+rows: [
+{ name: '[상품명 A]', qty: '312', amount: '936,000원' },
+{ name: '[상품명 B]', qty: '248', amount: '744,000원' },
+{ name: '[상품명 C]', qty: '190', amount: '570,000원' },
+{ name: '[상품명 D]', qty: '151', amount: '453,000원' },
+{ name: '[상품명 E]', qty: '96', amount: '288,000원' }
+],
+chips: [
+{ label: 'ROAS 낮은 채널 강조' },
+{ label: '지난달과 비교' },
+{ label: '보고서에 추가' }
+]
+};
+}
+}
+</script>
+</body>
+</html>

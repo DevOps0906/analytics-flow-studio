@@ -1,0 +1,144 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "Charts.dc.html": {
+      "expand": "fill",
+      "h": 4000,
+      "is_interactive": true,
+      "title": "5 리포트 · 그래프 구조 (모든 경우의 수)",
+      "w": 1440,
+      "x": 0,
+      "y": 3800
+    },
+    "Check.dc.html": {
+      "expand": "fill",
+      "h": 1900,
+      "is_interactive": true,
+      "title": "2-3 데이터분석단계 · 전처리·정제 상세",
+      "w": 1440,
+      "x": 1520,
+      "y": 0
+    },
+    "DashboardMobile.dc.html": {
+      "expand": "fill",
+      "h": 1700,
+      "is_interactive": true,
+      "title": "3 프로젝트 상세 · 모바일 (~767px)",
+      "w": 390,
+      "x": 2513,
+      "y": 1205
+    },
+    "DashboardTablet.dc.html": {
+      "expand": "fill",
+      "h": 1280,
+      "is_interactive": true,
+      "title": "3 프로젝트 상세 · 태블릿 (768~1199px)",
+      "w": 1024,
+      "x": 0,
+      "y": 2400
+    },
+    "Main.dc.html": {
+      "expand": "fill",
+      "h": 1180,
+      "is_interactive": true,
+      "title": "3 프로젝트 상세 · 분석 대시보드 (데스크탑)",
+      "w": 1440,
+      "x": 0,
+      "y": 1100
+    },
+    "Report.dc.html": {
+      "h": 1123,
+      "paper": "a4",
+      "title": "4 리포트 미리보기 · A4",
+      "w": 794,
+      "x": 3040,
+      "y": 0
+    },
+    "Upload.dc.html": {
+      "expand": "fill",
+      "h": 860,
+      "is_interactive": true,
+      "title": "1 업로드 · 데스크탑",
+      "w": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "Generated.dc.html": {
+      "x": 1520,
+      "y": 3800,
+      "w": 1440,
+      "h": 1700,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "3-1 프로젝트 생성 결과 · 벤치마킹 구성"
+    },
+    "Home.dc.html": {
+      "x": 3920,
+      "y": 0,
+      "w": 1440,
+      "h": 1100,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "0 대시보드 · 시작 화면"
+    },
+    "Projects.dc.html": {
+      "x": 3920,
+      "y": 1220,
+      "w": 1440,
+      "h": 1100,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "1 프로젝트 목록"
+    },
+    "Steps.dc.html": {
+      "x": 3920,
+      "y": 2440,
+      "w": 1440,
+      "h": 1500,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "2 데이터분석단계 · 7단계 애니메이션"
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-10-24T07:25:00Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {
+    "view": "focused",
+    "file": "Home.dc.html"
+  },
+  "notes": {
+    "responsive": {
+      "text": "반응형 기준\n모바일 ~767px: 본문 14 · 제목 20 · KPI 숫자 24\n태블릿 768~1199px: 본문 15 · 제목 24 · KPI 숫자 28\n데스크탑 1200px~: 본문 16 · 제목 28 · KPI 숫자 32\n\n색상: 주색 #007A64(버튼) · 민트 #00C9A7(차트) · 블루 #2563EB · 앰버 #F59E0B · 코랄 #F43F5E\n서체: Noto Sans KR · 금액은 JetBrains Mono, 3자리 콤마 + 원\n\n모든 수치는 샘플이며 실제 데이터가 아닙니다.",
+      "w": 420,
+      "x": 1574,
+      "y": 2400
+    },
+    "title": {
+      "kind": "title1",
+      "maxW": 2960,
+      "text": "AI 데이터 분석·대시보드 서비스 · 디자인 시안",
+      "w": 240,
+      "x": 0,
+      "y": -300
+    }
+  },
+  "order": [
+    "Home.dc.html",
+    "Projects.dc.html",
+    "Upload.dc.html",
+    "Steps.dc.html",
+    "Check.dc.html",
+    "Main.dc.html",
+    "Generated.dc.html",
+    "Report.dc.html",
+    "Charts.dc.html",
+    "DashboardTablet.dc.html",
+    "DashboardMobile.dc.html"
+  ],
+  "pages": [],
+  "title": "데이터 대시보드 서비스 디자인 시안"
+}
